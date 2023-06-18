@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.3.0 | (17/6/2023)
+* 0.4.0 | (18/6/2023)
 
 <br/>
 
@@ -62,7 +62,7 @@ npm run start:dev
 
 <b>Release v0.2.0 | 17/6/2023</b>
 
-* Se instalaron mongoose y dotenv como dependencias. 
+* Se instalaron *mongoose* y *dotenv* como dependencias. 
 * Se conectó la aplicación a MongoDB, uitlizando el patrón Singleton para crear una única instancia de la conexión a la base de datos.
 * Se agregó el archivo .env para guardar las variables de entorno, y se utilizó dotenv para el manejo de la configuración y de la informacion sensible.
 * Actualización del readme.
@@ -72,3 +72,11 @@ npm run start:dev
 * Se creó el enrutador para derivar las request del cliente a los respectivos controllers de cada recurso de la API. 
 * Se realizaron pruebas de conexión a la API en Postman.
 * Actualización del readme.
+
+<b>Release v0.4.0 | 18/6/2023</b>
+
+* Se trabajó en el modelo de persistencia de MongoDB. Se crearon los modelos de documentos de cada recurso para poder ser almacenados en la base de datos.
+
+* Se crearon las clases correspondientes para manejar la funcionalidad de creación, obtención, actualización y eliminación de documentos.
+
+* Se instaló *mongoose-paginate-v2* para manejar el filtrado y la paginación al obtener los productos de la base de datos.
