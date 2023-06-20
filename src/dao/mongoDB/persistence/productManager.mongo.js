@@ -38,9 +38,9 @@ class ProductManager {
         }
     };
 
-    update = async (pid, product) => {
+    update = async (pid, updates) => {
         try {
-            const data = await Product.findByIdAndUpdate(pid, product);
+            const data = await Product.findByIdAndUpdate(pid, updates);
             return data;      
         } catch(error) {
             throw error;
