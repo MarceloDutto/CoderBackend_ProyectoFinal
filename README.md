@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.5.0 | (20/6/2023)
+* 0.6.0 | (21/6/2023)
 
 <br/>
 
@@ -15,6 +15,8 @@ Backend de una aplicación e-commerce para ser presentada como proyecto final en
 El proyecto final consiste en la creación de una API REST con la que se pueden realizar todo tipo de funciones relacionadas a la creación, modificación y eliminación de productos; además de la gestión de carritos y la finalización de compras. Por otra parte, se podrán registrar usuarios con diferentes niveles de acceso y privilegios, los cuales podrán comunicarse a través de un sistema de mensajería instantánea.
 
 El servidor está basado en un diseño de capas bien definidas y para su funcionamiento se utilizaron patrones de diseño de uso frecuente, tales como Singleton, Repository, Factory, DTO, entre otros. Se utilizan file system y base de datos como modelos de persistencia, e incluye vistas de las principales funcionalidades creadas con un motor de plantillas.
+
+El propósito de este repositorio y el de esta API, es educacional y de prueba. No se admite su uso de forma comercial.
 
 <br/>
 
@@ -30,6 +32,10 @@ El servidor está basado en un diseño de capas bien definidas y para su funcion
 | Eliminar productos | &#10004; | Es posible eliminar un producto del sistema. |
 
 <br/>
+
+## :book: Documentación
+
+La API e-commerce Backend cuenta con una completa documentación realizada en Swagger. Se puede acceder a ella desde el navegador en la ruta '/apidocs'.
 
 ## :wrench: Instalación
 
@@ -97,7 +103,13 @@ npm run start:dev
 
 * Se configuraron los endpoints necesarios para la interacción con el recurso de los productos en su controlador correspondiente. Ahora se puede crear, ver, actualizar y eliminar productos. La información será almacenada en el sistema de persistencia.
 * Se instaló *multer* para cargar las imágenes correspondientes a los productos. 
-* Se configuró el cargador de archivos para validar el tipo antes de realizar el guardado en la base de datos. Solo de admiten extensiones .jpg y .png.
+* Se configuró el cargador de archivos para validar el tipo antes de realizar el guardado en la base de datos. Solo se admiten extensiones .jpg y .png.
 * Se utilizó un DTO para retornar los datos de los productos, y así evitar la exposición de información sensible.
 * Se desarrolló un sistema en el que los productos se retornan con opciones de límite de resultados, paginación, filtrado por categoría y ordenamiento ascendente o descendente por precio.
+* Actualización del readme.
+
+<b>Release v0.6.0 | 21/6/2023</b>
+
+* Se instaló y se configuró *swagger* para compilar la documentación de la API.
+* Se realizó la documentación detallada de los endpoints del recurso products.
 * Actualización del readme.
