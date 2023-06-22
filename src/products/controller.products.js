@@ -3,6 +3,8 @@ import multer from "multer";
 import { imgFileFilter, prodImgStorage } from "../utils/multer.utils.js";
 import { getProducts, getProductById, createProduct, updateProduct, deleteProduct, deleteAllProducts } from "./service.products.js";
 import validateCreationParams from "./validateCreationParams.products.js";
+import objectIdRegex from "../utils/objectIdRegex.utils.js";
+import uuidRegex from "../utils/uuidRegex.utils.js";
 
 
 const router = Router();
@@ -26,7 +28,7 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
     try {
         const { pid } = req.params;
-        if(typeof pid !== 'string') return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
+        if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
 
         const response = await getProductById(pid);
         res.json({status: 'success', message: response.message, payload: response.payload});
@@ -90,7 +92,7 @@ router.patch('/:pid', uploader.array('images'), async (req, res) => {
         // TO DO: Only an owner or an admin can update a product
 
         const { pid } = req.params;
-        if(typeof pid !== 'string') return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
+        if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
 
         const { name, description, category, code, price, stock } = req.body;
         const Nprice = Number(price);
@@ -136,7 +138,7 @@ router.patch('/:pid', uploader.array('images'), async (req, res) => {
 router.delete('/:pid', async (req, res) => {
     try {
         const { pid } = req.params;
-        if(typeof pid !== 'string') return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
+        if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
     
         // TO DO: Only an owner or an admin can delete a product
         

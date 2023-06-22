@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.6.0 | (21/6/2023)
+* 0.7.0 | (22/6/2023)
 
 <br/>
 
@@ -31,11 +31,26 @@ El propósito de este repositorio y el de esta API, es educacional y de prueba. 
 | Actualizar productos | &#10004; | Se pueden actualizar los productos ya creados. |
 | Eliminar productos | &#10004; | Es posible eliminar un producto del sistema. |
 
+<b>Features de carritos</b>
+
+| Feature  |  Disponible   | Descripción  |
+|----------|:-------------:|:-------------|
+| Crear un carrito | &#10004; | Se puede crear carritos que almacenan productos. |
+| Listar carritos | &#10004; | Se pueden listar todos los carritos o individualmente por su id. |
+| Agregar producto | &#10004; | Se pueden agregar productos al carrito. En caso de que el producto ya exista, se agrega una unidad del mismo. |
+| Actualizar productos | &#10004; | El contenido del carrito puede ser actualizado de forma completa. |
+| Actualizar cantidad | &#10004; | Se puede modificar la cantidad de un producto contentido en el carrito. |
+| Finalizar compra | &#10004; | Es posible realizar el proceso de compra total de los productos del carrito. |
+| Eliminar producto | &#10004; | Es posible eliminar un producto del carrito. |
+| Vaciar carrito | &#10004; | Es posible eliminar todos los items del carrito. |
+
 <br/>
 
 ## :book: Documentación
 
 La API e-commerce Backend cuenta con una completa documentación realizada en Swagger. Se puede acceder a ella desde el navegador en la ruta '/apidocs'.
+
+<br/>
 
 ## :wrench: Instalación
 
@@ -112,4 +127,10 @@ npm run start:dev
 
 * Se instaló y se configuró *swagger* para compilar la documentación de la API.
 * Se realizó la documentación detallada de los endpoints del recurso products.
+* Actualización del readme.
+
+<b>Release v0.7.0 | 22/6/2023</b>
+
+* Se configuraron los endpoints para interactuar con el recurso de los carritos en su controlador correspondiente.
+* Se realizó la documentación de esta funcionalidad en Swagger.
 * Actualización del readme.

@@ -64,7 +64,7 @@ paths:
               schema:
                 $ref: '#components/schemas/Products'
         "400":
-          description: Error del cliente, provocado por enviar como parámetro un id inválido.
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
         "500":
           description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
     patch:
@@ -88,7 +88,7 @@ paths:
         "200":
           description: El producto ha sido validado y fue actualizado exitosamente.
         "400":
-          description: Error del cliente, provocado por enviar como parámetro un id inválido.
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
         "401":
           description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
         "403":
@@ -110,7 +110,7 @@ paths:
         "200":
           description: El producto se eliminó de la base de datos.
         "400":
-          description: Error del cliente, provocado por enviar como parámetro un id inválido.
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
         "401":
           description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
         "403":
