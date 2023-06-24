@@ -1,5 +1,6 @@
 import CartManager from "../dao/mongoDB/persistence/cartManager.mongo.js";
 import { getProductById, updateProduct } from "../products/service.products.js";
+import { createTicket } from "../tickets/service.tickets.js";
 import cartDTO from "../DTOs/cart.dto.js";
 
 const cm = new CartManager();
@@ -8,7 +9,7 @@ export const getCarts = async () => {
     try {
         const data = await cm.getAll();
         if(data.length === 0) return {message: 'La base de datos no contiene carritos', payload: []};
-        const cart = new cartDTO(data)
+        const carts = data.map(doc => new cartDTO(doc));
         return {message: 'Carritos encontrados', payload: carts};
     } catch(error) {
         throw error;
@@ -168,7 +169,10 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
                     await updateProduct(id, {stock: product.payload.stock - quantity});
                     const subtotal = price * quantity;
                     const item = {
-                        product: product.id,
+                        item: {
+                            name: product.payload.name,
+                            quantity
+                        },
                         subtotal
                     };
                     allowedProducts.push(item);
@@ -191,15 +195,15 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
         }, 0);
 
         const ticketInfo = {
+            products: allowedProducts,
             amount,
             purchaser
         };
 
-        // TO DO: Create purchaseTicket
-        if(rejectedProducts.length > 0) return {statusCode: 200, status: 'success', message: 'Algunos productos de tu carrito no tienen stock. La compra fue realizada exitosamente con los productos disponibles', payload: ticketInfo};
-        // edit return to send purchaseTicket
+        const purchaseTicket = await createTicket(ticketInfo);
+        if(rejectedProducts.length > 0) return {statusCode: 200, status: 'success', message: 'Algunos productos de tu carrito no tienen stock. La compra fue realizada exitosamente con los productos disponibles', payload: purchaseTicket};
 
-        return {statusCode: 200, status: 'success', message: 'La compra fue realizada exitosamente', payload: ticketInfo}; // edit return to send purchaseTicket
+        return {statusCode: 200, status: 'success', message: 'La compra fue realizada exitosamente', payload: purchaseTicket};
     } catch(error) {
         throw error;
     }

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.8.0 | (24/6/2023)
+* 0.9.0 | (24/6/2023)
 
 <br/>
 
@@ -153,4 +153,10 @@ npm run start:dev
 * Se instaló y se configuró *bcrypt* para hashear la contraseña en el registro del usuario, para que quede protegida en la base de datos y utilizarla en los siguientes inicios de sesión.
 * Se utilizó un DTO para retornar los datos de los usuarios, y así evitar la exposición de información sensible.
 * Se realizó la documentación de la API de usuarios en *swagger*.
+* Actualización del readme.
+
+<b>Release v0.9.0 | 24/6/2023</b>
+
+* Se desarrolló el servicio de tickets para crear comprobantes de compra, que detallan la fecha y hora, los productos y su cantidad, el total del valor, y qué usuario está realizándola.
+* Se modificó el servicio de carritos para emitir el ticket al finalizar la compra.
 * Actualización del readme.

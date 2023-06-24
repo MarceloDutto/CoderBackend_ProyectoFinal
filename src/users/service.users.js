@@ -237,7 +237,7 @@ export const deleteOutdatedUsers = async () => {
         const data = await um.getAll();
         if(data.length === 0) return {status: 'error', message: 'La base de datos no contiene usuarios registrados', payload: []};
 
-        const timeFrame = 60;
+        const timeFrame = 172800; // cantidad de segundos en dos días
         let outdatedUsers = [];
 
         data.forEach(user => {

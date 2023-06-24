@@ -8,6 +8,7 @@ const ticketSchema = new mongoose.Schema({
         unique: true
     },
     purchase_datetime: String,
+    products: Array,
     amount: Number,
     purchaser: String
 });
