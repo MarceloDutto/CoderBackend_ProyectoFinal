@@ -40,10 +40,11 @@ router.get('/:pid', async (req, res) => {
 
 router.post('/', uploader.array('images'), async (req, res) => {
     try {
+        //condicion para subir archivos
         const { name, description, category, code, price, stock } = req.body;
         if(!name || !description || !category || !code || !price || !stock) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos.'});
         const Nprice = Number(price);
-        const Nstock = Number(stock)
+        const Nstock = Number(stock);
         
         const paramsValidation = validateCreationParams({name, description, category, code, Nprice, Nstock});
         if(!paramsValidation.isValid) return res.status(400).json({status: 'error', message: paramsValidation.message});
@@ -90,7 +91,8 @@ router.post('/', uploader.array('images'), async (req, res) => {
 router.patch('/:pid', uploader.array('images'), async (req, res) => {
     try {
         // TO DO: Only an owner or an admin can update a product
-
+        
+        //condicion para subir archivos
         const { pid } = req.params;
         if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
 
@@ -141,6 +143,7 @@ router.delete('/:pid', async (req, res) => {
         if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
     
         // TO DO: Only an owner or an admin can delete a product
+        // TO DO: in case of admin deletion of product that had a premium owner, it sends an email with a warning
         
         const response = await deleteProduct(pid);
         res.json({status: response.status, message: response.message, payload: response.payload});

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.7.0 | (22/6/2023)
+* 0.8.0 | (24/6/2023)
 
 <br/>
 
@@ -12,7 +12,7 @@
 
 Backend de una aplicación e-commerce para ser presentada como proyecto final en el curso de Programación Backend de Coderhouse. El curso fue realizado de forma virtual entre diciembre de 2022 y junio de 2023.
 
-El proyecto final consiste en la creación de una API REST con la que se pueden realizar todo tipo de funciones relacionadas a la creación, modificación y eliminación de productos; además de la gestión de carritos y la finalización de compras. Por otra parte, se podrán registrar usuarios con diferentes niveles de acceso y privilegios, los cuales podrán comunicarse a través de un sistema de mensajería instantánea.
+El proyecto final consiste en la creación de una API REST con la que se pueden realizar todo tipo de funciones relacionadas a la creación, modificación y eliminación de productos; además de la gestión de carritos y la finalización de compras. Por otra parte, se podrán registrar usuarios con diferentes niveles de acceso y privilegios (usuario, premium y administrador), los cuales podrán comunicarse a través de un sistema de mensajería instantánea.
 
 El servidor está basado en un diseño de capas bien definidas y para su funcionamiento se utilizaron patrones de diseño de uso frecuente, tales como Singleton, Repository, Factory, DTO, entre otros. Se utilizan file system y base de datos como modelos de persistencia, e incluye vistas de las principales funcionalidades creadas con un motor de plantillas.
 
@@ -43,6 +43,17 @@ El propósito de este repositorio y el de esta API, es educacional y de prueba. 
 | Finalizar compra | &#10004; | Es posible realizar el proceso de compra total de los productos del carrito. |
 | Eliminar producto | &#10004; | Es posible eliminar un producto del carrito. |
 | Vaciar carrito | &#10004; | Es posible eliminar todos los items del carrito. |
+
+<b>Features de usuarios</b>
+
+| Feature  |  Disponible   | Descripción  |
+|----------|:-------------:|:-------------|
+| Registar usuario | &#10004; | Un usuario se puede registar en el sistema. |
+| Listar usuarios | &#10004; | Un administrador puede listar a todos los usuarios. |
+| Actualizar documentación | &#10004; | Un usuario puede subir documentación para ser validado como premium. |
+| Cambiar rol | &#10004; | Un administrador puede cambiar el rol de un usuario entre regular y premium. |
+| Eliminar usuarios | &#10004; | Un administrador puede eliminar un usuario del sistema. |
+| Eliminar usuarios sin conexión | &#10004; | Un administrador puede eliminar del sistema a los usuarios que no se han conectado en un determinado tiempo. |
 
 <br/>
 
@@ -133,4 +144,13 @@ npm run start:dev
 
 * Se configuraron los endpoints para interactuar con el recurso de los carritos en su controlador correspondiente.
 * Se realizó la documentación de esta funcionalidad en Swagger.
+* Actualización del readme.
+
+<b>Release v0.8.0 | 24/6/2023</b>
+
+* Se configuraron los endpoints para interactuar con el recurso de usuarios en su controlador correspondiente.
+* Se configuró *multer* para recibir archivos de imagen de perfil y documentación del usuario, limitando los tipos de archivo.
+* Se instaló y se configuró *bcrypt* para hashear la contraseña en el registro del usuario, para que quede protegida en la base de datos y utilizarla en los siguientes inicios de sesión.
+* Se utilizó un DTO para retornar los datos de los usuarios, y así evitar la exposición de información sensible.
+* Se realizó la documentación de la API de usuarios en *swagger*.
 * Actualización del readme.

@@ -1,12 +1,14 @@
 import CartManager from "../dao/mongoDB/persistence/cartManager.mongo.js";
 import { getProductById, updateProduct } from "../products/service.products.js";
+import cartDTO from "../DTOs/cart.dto.js";
 
 const cm = new CartManager();
 
 export const getCarts = async () => {
     try {
-        const carts = await cm.getAll();
-        if(carts.length === 0) return {message: 'La base de datos no contiene carritos', payload: []};
+        const data = await cm.getAll();
+        if(data.length === 0) return {message: 'La base de datos no contiene carritos', payload: []};
+        const cart = new cartDTO(data)
         return {message: 'Carritos encontrados', payload: carts};
     } catch(error) {
         throw error;
@@ -15,8 +17,9 @@ export const getCarts = async () => {
 
 export const getCartById = async (cid) => {
     try {
-        const cart = await cm.getById(cid);
-        if(Object.keys(cart).length === 0) return {message: 'Carrito no encontrado en la base de datos', payload: {}};
+        const data = await cm.getById(cid);
+        if(Object.keys(data).length === 0) return {message: 'Carrito no encontrado en la base de datos', payload: {}};
+        const cart = new cartDTO(data)
         return {message: 'Carrito encontrado en la base de datos', payload: cart};
     } catch(error) {
         throw error;
@@ -25,7 +28,8 @@ export const getCartById = async (cid) => {
 
 export const createCart = async () => {
     try {
-        const newCart = await cm.create();
+        const data = await cm.create();
+        const newCart = new cartDTO(data)
         return {message: 'El carrito fue creado correctamente en la base de datos', payload: newCart};
     } catch(error) {
         throw error;
@@ -196,6 +200,19 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
         // edit return to send purchaseTicket
 
         return {statusCode: 200, status: 'success', message: 'La compra fue realizada exitosamente', payload: ticketInfo}; // edit return to send purchaseTicket
+    } catch(error) {
+        throw error;
+    }
+};
+
+// For internal application use
+export const deleteCart = async (cid) => {
+    try {
+        const cart = await cm.getById(cid);
+        if(Object.keys(cart).length === 0) return {status: 'error', message: 'Carrito no encontrado en la base de datos'};
+
+        await cm.delete(cid);
+        return {status: 'success', message: 'Carrito eliminado'}
     } catch(error) {
         throw error;
     }

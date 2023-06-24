@@ -9,7 +9,7 @@ const swaggerOptions = {
             description: 'Información sobre las características y funcionalidades de los recursos de la aplicación de e-commerce desarrollada en la clase de Programación Backend de Coderhouse.'
         }
     },
-    apis: [`${__dirname}/docs/**/*.yaml`]
+    apis: [`${__dirname}/documentation/**/*.yaml`]
 };
 
 const swaggerSpecs = swaggerJSDoc(swaggerOptions);

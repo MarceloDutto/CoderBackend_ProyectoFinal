@@ -1,0 +1,254 @@
+openapi: "3.0.1"
+info:
+  title: API de usuarios
+  version: "1.0"
+paths:
+  /api/users/:
+    get:
+      summary: Se obtienen todos los usuarios de la base de datos. Solo el administrador tendrá acceso a este endpoint. 
+      tags:
+        - Usuarios
+      responses: 
+        "200":
+          description: La consulta fue respondida satisfactoriamente, y se obtuvieron todos los usuarios de la base de datos. En caso de que la base de datos no contuviera items, se retorna un objeto vacío con un mensaje de aviso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/UserDTO'
+        "401":
+          description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
+        "403":
+          description: Error generado cuando se intenta acceder a una consulta no autorizada por la política de permisos.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+    post:
+      summary: Crea y registra un usuario en la base de datos. Admite la subida de imagen de foto de perfil con extensiones .jpg y .png. 
+      tags:
+       - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/createUser"
+      responses:
+        "201":
+          description: El usuario ha sido validado y fue agregado exitosamente a la base de datos.
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Users'
+        "400":
+          description: Error del cliente al ingresar los campos de creación o se intentó subir un archivo que no es de imagen como foto de perfil. También es posible el email con el que se intenta hacer la solicitud ya está registrado en la base de datos con otro usuario.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+    delete:
+      summary: Elimina a los usuarios que no se han conectado al e-commerce en un plazo de dos días. Solo el administrador tendrá acceso a este endpoint.
+      tags:
+       - Usuarios
+      responses:
+        "200":
+          description: Los usuarios se eliminaron de la base de datos.
+        "400":
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
+        "401":
+          description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
+        "403":
+          description: Error generado cuando se intenta acceder a una consulta no autorizada por la política de permisos.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+  /api/users/{uid}:
+    delete:
+      summary: Elimina un usuario de la base de datos a partir de su id. Solo el administrador tendrá acceso a este endpoint.
+      tags:
+       - Usuarios
+      parameters: 
+      - name: uid
+        in: path
+        required: true
+        description: Id del usuario que se quiere eliminar.
+        schema:
+          $type: string 
+      responses:
+        "200":
+          description: El producto se eliminó de la base de datos.
+        "400":
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
+        "401":
+          description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
+        "403":
+          description: Error generado cuando se intenta acceder a una consulta no autorizada por la política de permisos.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+  /api/users/{uid}/documents:
+    post:
+      summary: Permite subir la documentación requerida para validar al usuario y acceder a la categoría premium. Solo se admiten archivos con extensión .pdf. Únicamente el administrador tendrá acceso a este endpoint.
+      tags:
+        - Usuarios
+      parameters: 
+      - name: uid
+        in: path
+        required: true
+        description: Id del usuario que sube la documentación.
+        schema:
+          $type: string 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/uploadDocumentation"
+      responses: 
+        "200":
+          description: La consulta fue respondida y se realizó el cambio de rol satisfactoriamente.
+        "400":
+          description: Error del cliente, generalmente provocado por un error de tipo de archivo o por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
+        "401":
+          description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
+        "403":
+          description: Error generado cuando se intenta acceder a una consulta no autorizada por la política de permisos.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+  /api/users/premium/{uid}:
+    get:
+      summary: Permite cambiar el rol de un usuario de "user" a "premium" y viceversa. Únicamente el administrador tendrá acceso a este endpoint.
+      tags:
+        - Usuarios
+      parameters: 
+      - name: uid
+        in: path
+        required: true
+        description: Id del usuario al que se le modificará su rol.
+        schema:
+          $type: string 
+      responses: 
+        "200":
+          description: La consulta fue respondida satisfactoriamente, y se modificó el rol del usuario al parámetro requerido.
+        "400":
+          description: Error del cliente, provocado por enviar como parámetro un id inválido (sólo se aceptan ObjectId de Mongo y o cadenas de texto tipo uuid).
+        "401":
+          description: Sucede cuando se intenta realizar una consulta sin haberse autenticado en la página.
+        "403":
+          description: Error generado cuando se intenta acceder a una consulta no autorizada por la política de permisos.
+        "500":
+          description: Error interno del servidor, generalmente provocado por un fallo de conexión con la base de datos.
+  
+components:
+  schemas:
+   Users:
+    type: object
+    properties:
+      _id:
+        type: objectId
+        description: Id autogenerado de MongoDB
+      first_name:
+        type: string
+        description: Nombre de pila del usuario
+      last_name:
+        type: string
+        description: Apellido del usuario
+      age:
+        type: number
+        description: Edad del usuario
+      profile_picture:
+        type: string
+        description: Link a la imagen de perfil del usario
+      email:
+        type: string
+        description: Correo electrónico del usuario
+      password:
+        type: string
+        description: contraseña elegida por el usuario para inicar sesión
+      cart:
+        type: string
+        description: id del carrito del usuario
+      role:
+        type: string
+        description: tipo de acceso a las funcionalidades. Los roles disponibles son user, premium y admin
+      documents:
+        type: string
+        description: link a la documentación de verificación del usuario
+    example:
+      _id: ObjectId('645ed4022ceae6abf4feafb7')
+      fisrt_name: Juan
+      last_name: Pérez
+      age: 18
+      profile_picture: 'https://loremflickr.com/640/480'
+      email: juan@perez.com
+      password: juan1234
+      cart: 645ed4022cgfd6abf3feafb7
+      role: user
+      documents: [identification, address, bankAccount]
+   UserDTO:
+    type: object
+    properties:
+      first_name:
+        type: string
+        description: Nombre de pila del usuario
+      last_name:
+        type: string
+        description: Apellido del usuario
+      email:
+        type: string
+        description: Correo electrónico del usuario
+      role:
+        type: string
+        description: tipo de acceso a las funcionalidades. Los roles disponibles son user, premium y admin
+    example:
+      fisrt_name: Juan
+      last_name: Pérez
+      email: juan@perez.com
+      role: user
+  requestBodies:
+    createUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre de pila del usuario
+          required: true
+        last_name:
+          type: string
+          description: Apellido del usuario
+          required: true
+        age:
+          type: number
+          description: Edad del usuario
+          required: true
+        profile_picture:
+          type: string
+          description: Link a la imagen de perfil
+        email:
+          type: string
+          description: Correo electrónico del usuario
+          required: true
+        password:
+          type: string
+          description: Contraseña elegida por el usuario para iniciar sesión
+          required: true
+      example:
+        first_name: Juan
+        last_name: Pérez
+        age: 18
+        profile_picture: 'https://loremflickr.com/640/480'
+        email: juan@perez.com
+        password: juan1234
+    uploadDocumentation:
+      type: object
+      properties:
+        identity:
+          type: string
+          description: Archivo con la verificación de identidad del usuario
+        address:
+          type: string
+          description: Archivo con la verificación de domicilio del usuario
+        account:
+          type: string
+          description: Archivo con la verificación de cuenta bancaria del usuario
+      example:
+        identity: carnet.pdf
+        address: certificadoDeDomicilio.pdf
+        account: estadoCuenta.pdf
+        
