@@ -40,7 +40,6 @@ router.get('/:pid', async (req, res) => {
 
 router.post('/', uploader.array('images'), async (req, res) => {
     try {
-        //condicion para subir archivos
         const { name, description, category, code, price, stock } = req.body;
         if(!name || !description || !category || !code || !price || !stock) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos.'});
         const Nprice = Number(price);
@@ -92,7 +91,6 @@ router.patch('/:pid', uploader.array('images'), async (req, res) => {
     try {
         // TO DO: Only an owner or an admin can update a product
         
-        //condicion para subir archivos
         const { pid } = req.params;
         if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
 

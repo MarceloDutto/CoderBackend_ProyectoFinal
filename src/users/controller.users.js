@@ -40,12 +40,10 @@ router.get('/premium/:uid', async (req, res) => {
 
 router.post('/', imgUploader.single('image'), async (req, res) => {
     try {
-        //condicion para subir archivos
         const { first_name, last_name, age, email, password } = req.body;
         if(!first_name || !last_name || !age || !email || !password) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos'});
         const Nage = Number(age);
     
-        // Revisar validacion
         const paramsValidation = validateCreationParams({first_name, last_name, Nage, email, password});
         if(!paramsValidation.isValid) return res.status(400).json({status: 'error', message: paramsValidation.message});
     
@@ -55,9 +53,9 @@ router.post('/', imgUploader.single('image'), async (req, res) => {
     
         // Check if the file uploaded with multer have .jpg or .png extensions and store it
         if(req.file) {
-            const files = req.file;
-            if(files.mimetype === 'image/jpeg' || files.mimetype === 'image/png' ) {
-                profPicture = `/img/users/${files.filename}`;
+            const file = req.file;
+            if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' ) {
+                profPicture = `/img/users/${file.filename}`;
             }
         };
     
@@ -80,7 +78,6 @@ router.post('/', imgUploader.single('image'), async (req, res) => {
 
 router.post('/:uid/documents', docUploader, async (req, res) => {
     try {
-        //condicion para subir archivos
         const { uid } = req.params;
         if(!(objectIdRegex.test(uid) || uuidRegex.test(uid))) return res.status(400).json({status: 'error', message: 'El id del usuario no tiene un formato válido'});
 

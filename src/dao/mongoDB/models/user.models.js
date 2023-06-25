@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'user'
     },
+    googleId: String,
     recoveryToken: {
         type: String,
         default: ''

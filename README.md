@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.9.0 | (24/6/2023)
+* 0.10.0 | (25/6/2023)
 
 <br/>
 
@@ -158,5 +158,12 @@ npm run start:dev
 <b>Release v0.9.0 | 24/6/2023</b>
 
 * Se desarrolló el servicio de tickets para crear comprobantes de compra, que detallan la fecha y hora, los productos y su cantidad, el total del valor, y qué usuario está realizándola.
+* Se instaló la librería *uuid* y se utilizó para generar el código único de cada ticket.
 * Se modificó el servicio de carritos para emitir el ticket al finalizar la compra.
+* Actualización del readme.
+
+<b>Release v0.10.0 | 25/6/2023</b>
+
+* Se configuró *passport* y *jwt* para manejar la autenticación de usuarios.
+* Se realizó la lógica de autenticación por terceros con GitHub y Google.
 * Actualización del readme.

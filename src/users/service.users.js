@@ -41,9 +41,20 @@ export const getUserByEmail = async (email) => {
     }
 };
 
+export const getUserByQuery = async (query) => {
+    try {
+        const data = await um.getByQuery(query);
+        if(Object.keys(data).length === 0) return {message: 'Usuario no encontrado en la base de datos', payload: {}};
+        
+        return {message: 'Usuario encontrado', payload: data};
+    } catch(error) {
+        throw error;
+    }
+};
+
 export const createUser = async (userInfo) => {
     try {
-        const { first_name, last_name, age, profile_picture, email, password } = userInfo;
+        const { first_name, last_name, age, profile_picture, email, password, googleId } = userInfo;
 
         const user = await getUserByEmail(email);
         if(Object.keys(user.payload).length !== 0) return {statusCode: 400, message: 'Ya existe un usuario regitrado con el mismo email', payload: {}};
@@ -57,6 +68,7 @@ export const createUser = async (userInfo) => {
             profile_picture,
             email,
             password: createHash(password),
+            googleId: googleId? googleId : '',
             cart: userCart.payload.id,
             last_connection: new Date()
         };
