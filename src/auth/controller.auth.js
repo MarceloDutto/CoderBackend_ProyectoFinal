@@ -1,8 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
-import { localAuthentication, externalAuthentication, logout } from "./service.auth.js";
+import { localAuthentication, externalAuthentication, logout, forgotPassword, resetPassword } from "./service.auth.js";
 import { getUserByEmail } from "../users/service.users.js";
 import regexEmail from "../utils/emailRegex.utils.js";
+import regexToken from "../utils/tokenRegex.utils.js";
 
 const router = Router();
 
@@ -44,8 +45,6 @@ router.post('/', async (req, res) => {
         if(!regexEmail.test(email)) return res.status(400).json({status: 'error', message: 'El correo electrónico ingresado no es válido'});
         if(typeof password === 'string' && password.trim() === '') return res.status(400).json({status: 'error', message: 'Debe ingresar un tipo de contraseña valido'});
 
-        //TO DO: validar lo que viene del body
-
         const response = await localAuthentication(email, password);
         if(response.status === 'error') return res.status(400).json({status: response.status, message: response.message, payload: {}});
         res.cookie('authToken', response.payload, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: response.message});
@@ -55,18 +54,33 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.post('/forgotPassword', async (req, res) => {
+    try {
+        const { email } = req.body;
+        if(!regexEmail.test(email)) return res.status(400).json({status: 'error', message: 'El correo electrónico ingresado no es válido'});
 
-
-router.put('/', async (req, res) => {
-    res.json({message: 'auth PUT'});
+        const response = await forgotPassword(email);
+        res.json({status: response.status, message: response.message});
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
+    }
 });
 
-router.patch('/', async (req, res) => {
-    res.json({message: 'auth PATCH'});
-});
 
-router.delete('/', async (req, res) => {
-    res.json({message: 'auth DELETE'});
+
+router.post('/resetPassword', async (req, res) => {
+    try {
+        const { password, token } = req.body;
+
+        if(typeof password === 'string' && password.trim() === '') return res.status(400).json({status: 'error', message: 'Debe ingresar un tipo de contraseña valido'});
+        if(!regexToken.test(token)) return res.status(400).json({status: 'error', message: 'Las credenciales de validación no tiene un formato adecuado'});
+
+        const response = await resetPassword(token, password);
+        res.json({status: response.status, message: response.message});
+    } catch(error) {
+        throw error;
+    }
 });
 
 export default router;

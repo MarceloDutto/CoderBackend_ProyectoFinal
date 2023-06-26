@@ -20,4 +20,18 @@ router.get('/login', (req, res) => {
     })
 });
 
+router.get('/forgotPassword', (req, res) => {
+    res.render('forgotPassword', {
+        title: '¿Olvidaste tu contraseña?',
+        style: 'forgot.css'
+    })
+});
+
+router.get('/resetPassword', (req, res) => {
+    res.render('resetPassword', {
+        title: 'Cambiar contraseña',
+        style: 'reset.css'
+    })
+});
+
 export default router;

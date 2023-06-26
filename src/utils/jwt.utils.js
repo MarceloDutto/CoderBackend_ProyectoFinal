@@ -3,7 +3,7 @@ import jwtConfig from '../config/jwt.config.js';
 
 const jwt_secret = jwtConfig.jwt_secret;
 
-export const generateToken = user => {
-    const token = jwt.sign({user}, jwt_secret, {expiresIn: '15m'});
+export const generateToken = (content, expirationTime) => {
+    const token = jwt.sign(content , jwt_secret, {expiresIn: expirationTime});
     return token
 };

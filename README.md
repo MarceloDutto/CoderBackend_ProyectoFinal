@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.11.0 | (26/6/2023)
+* 0.12.0 | (26/6/2023)
 
 <br/>
 
@@ -172,5 +172,12 @@ npm run start:dev
 
 - Se instaló el motor de plantillas *Handlebars* para el manejo de las vistas.
 * Se realizaron las vistas de signup y login para realizar pruebas de autenticación en el navegador.
-* Se completó la configuración del frontend con estilos *css* y scripts para manejo de formularios der egistro y de inicio de sesión.
+* Se completó la configuración del frontend con estilos *css* y scripts para manejo de formularios de registro y de inicio de sesión.
+* Actualización del readme.
+
+<b>Release v0.12.0 | 26/6/2023</b>
+
+* Se instaló y se configuró nodemailer para gestionar el envío de correos electrónicos a los usuarios.
+* Se configuró la funcionalidad de recuperación de contraseña con un token enviado por email.
+* Se desarrollaron las vistas correspondientes en Handlebars.
 * Actualización del readme.
