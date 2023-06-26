@@ -2,6 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import handlebars from 'express-handlebars';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import __dirname from './utils/dirname.utils.js';
 import appConfig from './config/app.config.js';
 import router from './router/index.js';
@@ -15,6 +16,7 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));

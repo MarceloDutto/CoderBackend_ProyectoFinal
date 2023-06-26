@@ -43,7 +43,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
         const { cid, pid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid)) && !(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
 
-        // TO DO: Check if the cart's owner is adding a product of their own
+        // TO DO: Check if the cart's owner is adding a product of their own (req.user)
 
         const response = await addProductToCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.12.0 | (26/6/2023)
+* 0.13.0 | (26/6/2023)
 
 <br/>
 
@@ -180,4 +180,10 @@ npm run start:dev
 * Se instaló y se configuró nodemailer para gestionar el envío de correos electrónicos a los usuarios.
 * Se configuró la funcionalidad de recuperación de contraseña con un token enviado por email.
 * Se desarrollaron las vistas correspondientes en Handlebars.
+* Actualización del readme.
+
+<b>Release v0.13.0 | 26/6/2023</b>
+
+* Se instaló CORS para eventualmente poder controlar las conexiones a la API.
+* Se validaron todos los parámetros y los datos provenientes del body para evitar posibles errores y fallos de seguridad. Además se aplicaron pruebas de regex con el mismo fin.
 * Actualización del readme.

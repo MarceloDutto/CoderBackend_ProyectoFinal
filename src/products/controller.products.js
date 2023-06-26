@@ -65,7 +65,7 @@ router.post('/', uploader.array('images'), async (req, res) => {
         };
         
         const owner = 'user'
-        // TO DO: Set owner to user.email or user.id
+        // TO DO: Set owner to user.email or user.id (req.user)
 
         const productInfo = {
             name, 
