@@ -34,26 +34,25 @@ const initializePassport = () => {
         callbackURL: github_callback_URL
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile);
             const data = await getUserByEmail(profile._json.email);
-            if(!data.payload) {
+            if(Object.keys(data.payload).length === 0) {
 
                 const newUser = {
                     first_name: profile._json.name,
                     last_name: '',
                     age: '',
-                    profile_picture: profile.photos[0].value,
+                    profile_picture: profile._json.avatar_url,
                     email: profile._json.email,
                     password: '',
                 };
 
                 const result = await createUser(newUser)
-                return done(null, result);
+                const payload = result.payload
+                return done(null, payload);
             };
 
             const user = data.payload;
             return done(null, user);
-            
         } catch(error) {
             return done(error);
         }
@@ -65,12 +64,11 @@ const initializePassport = () => {
         callbackURL: google_callback_URL
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile);
             const data = await getUserByQuery({ googleId: profile.id});
-            if(!data.payload) {
+            if(Object.keys(data.payload).length === 0) {
                 const newUser = {
                     googleId: profile.id,
-                    first_name: profile._json.give_name,
+                    first_name: profile._json.given_name,
                     last_name: profile._json.family_name,
                     age: '',
                     profile_picture: profile._json.picture,
@@ -79,7 +77,8 @@ const initializePassport = () => {
                 };
 
                 const result = await createUser(newUser)
-                return done(null, result);
+                const payload = result.payload
+                return done(null, payload);
             };
 
             const user = data.payload;

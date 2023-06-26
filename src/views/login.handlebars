@@ -1,0 +1,40 @@
+<div class="container">
+    <div class="page-title">
+        <h1>¡Ingresa a tu cuenta!</h1>
+    </div>
+
+    <div class="form-container">
+        <form action="" id="loginForm">
+            <div>
+                <label for="">Correo electrónico</label>
+                <input type="email" name="email" required>
+            </div>
+            <div>
+                <label for="">Contraseña</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="notification" id="notif"></div>
+
+            <div class="submit">
+                <button class="submitButton" type="submit">Iniciar sesion</button>
+            </div>
+            
+        </form>
+    </div>
+
+    <div class="foot">
+        <a href="/forgotPassword"><p class="p-link">¿Olvidó su contraseña?</p></a> 
+        <p class="p-info">¿No tenés cuenta? Registrate <a href="/signup">aquí</a>.</p>
+    </div>
+
+    <div class="loginDiv">
+        <div class="line"></div>
+        <div class="buttonDiv">
+            <p class="p-info">O ingresá con tu cuenta de</p>
+            <a href="/api/auth/github"><button class="loginButton"><img src="/img/app/githubLogo.png" alt="login con Github" class="loginGithubImg"></button></a>
+            <a href="/api/auth/google"><button class="loginButton"><img src="/img/app/googleLogo.png" alt="login con Google" class="loginGoogleImg"></button></a>
+        </div>
+    </div>
+</div>
+
+<script src="/js/login.js"></script>

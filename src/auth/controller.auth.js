@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import { localAuthentication, externalAuthentication, logout } from "./service.auth.js";
+import { getUserByEmail } from "../users/service.users.js";
+import regexEmail from "../utils/emailRegex.utils.js";
 
 const router = Router();
 
@@ -8,30 +10,27 @@ router.get('/logout', async (req, res) => {
     res.json({message: 'endpoint de logout'});
 });
 
-router.get('/github', passport.authenticate('github', {session: false}));
+router.get('/github', passport.authenticate('github', {scope: ['user:email'], session: false}));
 
-router.get('github/callback', passport.authenticate('github', {session: false}), async (req, res) => {
+router.get('/github/callback', passport.authenticate('github', {session: false}), async (req, res) => {
     try {
-        console.log(req.user);
-
         const { email } = req.user;
         const response = await externalAuthentication({email: email});
-        res.cookie('authToken', response.payload, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: 'Usuario autenticado con Github'});
+        res.cookie('authToken', response, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: 'Usuario autenticado con Github'});
     } catch(error) {
         console.log(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
 
-router.get('/google', passport.authenticate('google', {session: false}));
+router.get('/google', passport.authenticate('google', {scope: ['profile'], session: false}));
 
-router.get('google/callback', passport.authenticate('google', {session: false}), async (req, res) => {
+router.get('/google/callback', passport.authenticate('google', {session: false}), async (req, res) => {
     try {
-        console.log(req.user);
-
-        const { googleId } = req.user;
-        const response = await externalAuthentication({googleId: googleId});
-        res.cookie('authToken', response.payload, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: 'Usuario autenticado con Github'});
+        const { email } = req.user;
+        const user = await getUserByEmail(email);
+        const response = await externalAuthentication({googleId: user.payload.googleId});
+        res.cookie('authToken', response, {maxAge: 900000, httpOnly: true}).json({status: 'success', message: 'Usuario autenticado con Google'});
     } catch(error) {
         console.log(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
@@ -41,6 +40,9 @@ router.get('google/callback', passport.authenticate('google', {session: false}),
 router.post('/', async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        if(!regexEmail.test(email)) return res.status(400).json({status: 'error', message: 'El correo electrónico ingresado no es válido'});
+        if(typeof password === 'string' && password.trim() === '') return res.status(400).json({status: 'error', message: 'Debe ingresar un tipo de contraseña valido'});
 
         //TO DO: validar lo que viene del body
 

@@ -33,13 +33,14 @@ export const externalAuthentication = async (query) => {
         const user = data.payload;
 
         user.last_connection = new Date();
-        await updateUser(user.id, user);
+        const uid = user._id || user.id;
+        await updateUser(uid, user);
 
         const userData = {
             first_name: user.first_name,
             last_name: user.last_name,
             fullname: user.first_name + ' ' + user.last_name,
-            email,
+            email: user.email,
             cart: user.cart,
             role: user.role
         };

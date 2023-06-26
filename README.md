@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.10.0 | (25/6/2023)
+* 0.11.0 | (26/6/2023)
 
 <br/>
 
@@ -166,4 +166,11 @@ npm run start:dev
 
 * Se configuró *passport* y *jwt* para manejar la autenticación de usuarios.
 * Se realizó la lógica de autenticación por terceros con GitHub y Google.
+* Actualización del readme.
+
+<b>Release v0.11.0 | 26/6/2023</b>
+
+- Se instaló el motor de plantillas *Handlebars* para el manejo de las vistas.
+* Se realizaron las vistas de signup y login para realizar pruebas de autenticación en el navegador.
+* Se completó la configuración del frontend con estilos *css* y scripts para manejo de formularios der egistro y de inicio de sesión.
 * Actualización del readme.

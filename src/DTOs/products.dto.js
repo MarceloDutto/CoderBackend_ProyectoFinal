@@ -1,6 +1,6 @@
 export default class productsDTO{
     constructor(doc) {
-        this.id = doc._id,
+        this.id = doc._id? doc._id : doc.id,
         this.name = doc.name,
         this.description = doc.description,
         this.category = doc.category,

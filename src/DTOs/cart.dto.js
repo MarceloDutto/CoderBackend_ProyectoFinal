@@ -1,6 +1,6 @@
 export default class cartDTO{
     constructor(cart) {
-        this.id = cart._id || cart.id,
+        this.id = cart._id? cart._id : cart.id,
         this.products = cart.products
     }
 };

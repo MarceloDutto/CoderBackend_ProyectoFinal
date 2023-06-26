@@ -57,9 +57,14 @@ export const createUser = async (userInfo) => {
         const { first_name, last_name, age, profile_picture, email, password, googleId } = userInfo;
 
         const user = await getUserByEmail(email);
-        if(Object.keys(user.payload).length !== 0) return {statusCode: 400, message: 'Ya existe un usuario regitrado con el mismo email', payload: {}};
+        if(Object.keys(user.payload).length !== 0) return {statusCode: 400, status: 'error', message: 'Ya existe un usuario regitrado con el mismo email', payload: {}};
 
         const userCart = await createCart();
+
+        let pass = ''
+        if(password !== '') {
+            pass = createHash(password);
+        }; 
 
         const newUserInfo = {
             first_name,
@@ -67,15 +72,15 @@ export const createUser = async (userInfo) => {
             age,
             profile_picture,
             email,
-            password: createHash(password),
+            password: pass,
             googleId: googleId? googleId : '',
             cart: userCart.payload.id,
             last_connection: new Date()
         };
 
         const data = await um.create(newUserInfo);
-        const newUser = new userDTO(data)
-        return {statusCode: 201, message: 'Usuario registrado exitosamente', payload: newUser};
+        const newUser = new userDTO(data);
+        return {statusCode: 201, status: 'success', message: 'Usuario registrado exitosamente', payload: newUser};
     } catch(error) {
         throw error;
     }

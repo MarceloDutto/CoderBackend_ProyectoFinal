@@ -5,6 +5,7 @@ import { imgFileFilter, profImgStorage, docStorage, docFileFilter } from "../uti
 import validateCreationParams from "./validateCreationParams.users.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
 import uuidRegex from "../utils/uuidRegex.utils.js";
+import regexEmail from "../utils/emailRegex.utils.js";
 
 const router = Router();
 const imgUploader = multer({storage: profImgStorage, fileFilter: imgFileFilter});
@@ -42,8 +43,9 @@ router.post('/', imgUploader.single('image'), async (req, res) => {
     try {
         const { first_name, last_name, age, email, password } = req.body;
         if(!first_name || !last_name || !age || !email || !password) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos'});
+        if(!regexEmail.test(email)) return res.status(400).json({status: 'error', message: 'El correo electrónico ingresado no es válido'});
+        
         const Nage = Number(age);
-    
         const paramsValidation = validateCreationParams({first_name, last_name, Nage, email, password});
         if(!paramsValidation.isValid) return res.status(400).json({status: 'error', message: paramsValidation.message});
     
