@@ -2,8 +2,10 @@ import fs from 'fs';
 import UserManager from "../dao/mongoDB/persistence/userManager.mongo.js";
 import { createCart, deleteCart } from "../carts/service.carts.js";
 import { createHash } from "../utils/bcrypt.utils.js";
+import { generateToken } from '../utils/jwt.utils.js';
 import userDTO from "../DTOs/user.dto.js";
 import __dirname from '../utils/dirname.utils.js';
+
 
 const um = new UserManager();
 
@@ -121,8 +123,18 @@ export const changeUserRole = async (uid) => {
         };
 
         const updatedUser = await updateUser(uid, user);
-        // create cookie with new user data and delete the old one
-        return {status: 'success', message: `${updatedUser.message} El rol del usuario ahora es ${user.role.toUpperCase()}.`, payload: updatedUser.payload};
+
+        const userData = {
+            first_name: updatedUser.payload.update.first_name,
+            last_name: updatedUser.payload.update.last_name,
+            fullname: updatedUser.payload.update.first_name + ' ' + updatedUser.payload.update.last_name,
+            email: updatedUser.payload.update.email,
+            cart: updatedUser.payload.update.cart,
+            role: updatedUser.payload.update.role
+        };
+        let token = generateToken({ userData }, '15m');
+        
+        return {status: 'success', message: `${updatedUser.message} El rol del usuario ahora es ${user.role.toUpperCase()}.`, payload: updatedUser.payload, token};
     } catch(error) {
         throw error;
     }

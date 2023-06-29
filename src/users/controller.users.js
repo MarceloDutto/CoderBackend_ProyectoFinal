@@ -6,6 +6,7 @@ import validateCreationParams from "./validateCreationParams.users.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
 import uuidRegex from "../utils/uuidRegex.utils.js";
 import regexEmail from "../utils/emailRegex.utils.js";
+import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
 const imgUploader = multer({storage: profImgStorage, fileFilter: imgFileFilter});
@@ -15,7 +16,7 @@ const docUploader = multer({storage: docStorage, fileFilter: docFileFilter}).fie
     {name: 'account', maxCount: 1}
 ]);
 
-router.get('/', async (req, res) => {
+router.get('/', handlePolicies(['ADMIN']), async (req, res) => {
     try {
         const response = await getUsers();
         res.json({status: 'success', message: response.message, payload: response.payload});
@@ -25,13 +26,18 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/premium/:uid', async (req, res) => {
+router.get('/premium/:uid', handlePolicies(['ADMIN']), async (req, res) => {
     try {
         const { uid } = req.params;
         if(!(objectIdRegex.test(uid) || uuidRegex.test(uid))) return res.status(400).json({status: 'error', message: 'El id del usuario no tiene un formato válido'});
     
         const response = await changeUserRole(uid)
-        // create cookie with new user data and delete the old one
+
+        if(response.token) {
+            res.clearCookie('authToken');
+            return res.cookie('authToken', response.token, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: response.message, payload: response.payload});
+        };
+        
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
         console.log(error);
@@ -39,7 +45,7 @@ router.get('/premium/:uid', async (req, res) => {
     }
 });
 
-router.post('/', imgUploader.single('image'), async (req, res) => {
+router.post('/', imgUploader.single('image'), handlePolicies(['PUBLIC']), async (req, res) => {
     try {
         const { first_name, last_name, age, email, password } = req.body;
         if(!first_name || !last_name || !age || !email || !password) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos'});
@@ -78,7 +84,7 @@ router.post('/', imgUploader.single('image'), async (req, res) => {
     }
 });
 
-router.post('/:uid/documents', docUploader, async (req, res) => {
+router.post('/:uid/documents', handlePolicies(['USER']), docUploader, async (req, res) => {
     try {
         const { uid } = req.params;
         if(!(objectIdRegex.test(uid) || uuidRegex.test(uid))) return res.status(400).json({status: 'error', message: 'El id del usuario no tiene un formato válido'});
@@ -106,7 +112,7 @@ router.post('/:uid/documents', docUploader, async (req, res) => {
     }
 });
 
-router.delete('/', async (req, res) => {
+router.delete('/', handlePolicies(['ADMIN']), async (req, res) => {
     try {
         const response = await deleteOutdatedUsers();
         res.json({status: response.status, message: response.message, payload: response.payload});
@@ -116,7 +122,7 @@ router.delete('/', async (req, res) => {
     }
 });
 
-router.delete('/:uid', async (req, res) => {
+router.delete('/:uid', handlePolicies(['ADMIN']), async (req, res) => {
     try {
         const { uid } = req.params;
         if(!(objectIdRegex.test(uid) || uuidRegex.test(uid))) return res.status(400).json({status: 'error', message: 'El id del usuario no tiene un formato válido'});

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.14.0 | (28/6/2023)
+* 0.15.0 | (29/6/2023)
 
 <br/>
 
@@ -192,4 +192,10 @@ npm run start:dev
 
 * Se diseñó el resto de las vistas principales de la aplicación, tales como el listado de productos y la vista de sus detalles, la página de perfil, y el carrito para finalizar el proceso de compra.
 * Se creó la vista del panel de administrador para modificar el rol de un usuario y/o eliminarlo.
+* Actualización del readme.
+
+<b>Release v0.15.0 | 29/6/2023</b>
+
+* Se configuraron las politicas de acceso a los endpoints y las vistas.
+* Se dio forma a la lógica de logout, con eliminación del token del navegador.
 * Actualización del readme.

@@ -1,52 +1,54 @@
 import { Router } from "express";
-import { getProducts } from "../products/service.products.js"; // va?
+import { getProducts } from "../products/service.products.js"; 
 import { getCartById } from "../carts/service.carts.js";
+import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', handlePolicies('PUBLIC'), (req, res) => {
     res.redirect('/products')
 });
 
-router.get('/signup', (req, res) => {
+router.get('/signup', handlePolicies('PUBLIC'), (req, res) => {
     res.render('signup', {
         title: 'Registrate',
         style: 'signup.css'
     })
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', handlePolicies('PUBLIC'), (req, res) => {
     res.render('login', {
         title: 'Iniciar sesión',
         style: 'login.css'
     })
 });
 
-router.get('/forgotPassword', (req, res) => {
+router.get('/forgotPassword', handlePolicies(['PUBLIC']), (req, res) => {
     res.render('forgotPassword', {
         title: '¿Olvidaste tu contraseña?',
         style: 'forgot.css'
     })
 });
 
-router.get('/resetPassword', (req, res) => {
+router.get('/resetPassword', handlePolicies(['PUBLIC']), (req, res) => {
     res.render('resetPassword', {
         title: 'Cambiar contraseña',
         style: 'reset.css'
     })
 });
 
-router.get('/profile', (req, res) => {
-    //const user = req.user;
+router.get('/profile', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), (req, res) => {
+    const user = req.user;
     res.render('profile', {
         title: 'Perfil',
         style: 'profile.css',
-        // user
+        user
     })
 });
 
-router.get('/products', async (req, res) => {
+router.get('/products', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
+        const user = req.user;
         const limit = req.query.limit || 5;
         const page = req.query.page || 1;
         const query = req.query.query || null;
@@ -62,6 +64,7 @@ router.get('/products', async (req, res) => {
         res.render('products', {
             title: 'Productos',
             style: 'products.css',
+            user,
             showProducts,
             products,
             prevPageLink: data.payload.hasPrevPage? data.payload.prevLink : '', 
@@ -77,14 +80,16 @@ router.get('/products', async (req, res) => {
     }   
 });
 
-router.get('/products/details/:pid', async (req, res) => {
+router.get('/products/details/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
+    const user = req.user;
     res.render('productDetails', {
         title: 'Detalles del producto',
-        style: 'productDetails.css'
+        style: 'productDetails.css',
+        user
     });
 });
 
-router.get('/cart/:cid', async (req, res) => {
+router.get('/cart/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     const { cid } = req.params;
     let showProducts = false;
     let amount;
@@ -119,7 +124,7 @@ router.get('/cart/:cid', async (req, res) => {
     }
 });
 
-router.get('/admin', (req, res) => {
+router.get('/admin', handlePolicies(['ADMIN']), (req, res) => {
     res.render('users', {
         title: 'Panel de usuarios',
         style: 'users.css'

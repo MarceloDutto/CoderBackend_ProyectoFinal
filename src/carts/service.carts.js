@@ -177,7 +177,6 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
                         subtotal
                     };
                     allowedProducts.push(item);
-                    const prodIndex = cart.products.findIndex(prod => prod.product.equals(product.payload.id));
                     processedProductIds.push(id);
                 } catch(error) {
                     throw error;
@@ -199,7 +198,7 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
         const ticketInfo = {
             products: allowedProducts,
             amount,
-            purchaser
+            purchaser: purchaser.fullname
         };
 
         const purchaseTicket = await createTicket(ticketInfo);

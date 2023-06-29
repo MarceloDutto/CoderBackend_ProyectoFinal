@@ -1,7 +1,9 @@
 import { Router } from "express";
 import { getCarts, getCartById, createCart, addProductToCart, updateProductsfromCart, updateQuantity, deleteProductfromCart, deleteProductsfromCart, purchaseProductsInCart } from "./service.carts.js";
+import { getProductById } from "../products/service.products.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
 import uuidRegex from "../utils/uuidRegex.utils.js";
+import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
 
@@ -38,12 +40,16 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.post('/:cid/product/:pid', async (req, res) => {
+router.post('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid, pid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid)) && !(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
 
-        // TO DO: Check if the cart's owner is adding a product of their own (req.user)
+        const user = req.user;
+        if(user.role === 'premium' || user.role === 'admin') {
+            const product = await getProductById(pid);
+            if(product.payload.owner === user.email) return res.status(400).json({status: 'error', message: 'No se puede agregar al carrito un producto creado por el propio usuario'}); 
+        };
 
         const response = await addProductToCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
@@ -53,7 +59,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
 });
 
-router.put('/:cid', async (req, res) => {
+router.put('/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
@@ -85,7 +91,7 @@ router.put('/:cid', async (req, res) => {
     }
 });
 
-router.put('/:cid/product/:pid', async (req, res) => {
+router.put('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid, pid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid)) && !(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
@@ -102,7 +108,7 @@ router.put('/:cid/product/:pid', async (req, res) => {
     }
 });
 
-router.delete('/:cid/product/:pid', async (req, res) => {
+router.delete('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid, pid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid)) && !(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
@@ -115,7 +121,7 @@ router.delete('/:cid/product/:pid', async (req, res) => {
     }
 });
 
-router.delete('/:cid', async (req, res) => {
+router.delete('/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
@@ -128,14 +134,14 @@ router.delete('/:cid', async (req, res) => {
     }
 });
 
-router.get('/:cid/purchase', async (req, res) => {
+router.get('/:cid/purchase', handlePolicies(['USER, PREMIUM, ADMIN']), async (req, res) => {
     try {
         const { cid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
 
-        // TO DO: req.user for purchaser
+        const user = req.user;
 
-        const response = await purchaseProductsInCart(cid, 'user');
+        const response = await purchaseProductsInCart(cid, user);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
         console.log(error);

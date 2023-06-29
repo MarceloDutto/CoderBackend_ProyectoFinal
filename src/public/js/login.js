@@ -28,11 +28,7 @@ form.addEventListener('submit', e => {
             notification.innerHTML = `<p class="p-notification" id="notification-text">${data.message? data.message : data.error}</p>`
             notification.style.visibility = 'visible';
         } else {
-            /* window.location.href = '/products' */
-
-            //esto es temporal
-            notification.innerHTML = `<p class="p-notification" id="notification-text">Se logueo bien!${data.message? data.message : data.error}</p>`
-            notification.style.visibility = 'visible';
+            window.location.href = '/products'
         }
     })
     .catch(error => console.log(error))

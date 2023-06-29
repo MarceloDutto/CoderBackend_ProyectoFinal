@@ -4,11 +4,16 @@ import { localAuthentication, externalAuthentication, logout, forgotPassword, re
 import { getUserByEmail } from "../users/service.users.js";
 import regexEmail from "../utils/emailRegex.utils.js";
 import regexToken from "../utils/tokenRegex.utils.js";
+import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
 
-router.get('/logout', async (req, res) => {
-    res.json({message: 'endpoint de logout'});
+router.get('/logout', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
+    const user = req.user;
+    await logout(user.email);
+
+    res.clearCookie('authToken');
+    res.redirect('/login');
 });
 
 router.get('/github', passport.authenticate('github', {scope: ['user:email'], session: false}));

@@ -1,10 +1,14 @@
 import { Router } from "express";
 import multer from "multer";
 import { imgFileFilter, prodImgStorage } from "../utils/multer.utils.js";
+import { transport } from "../utils/nodemailer.utils.js";
+import nodemailerConfig from "../config/nodemailer.config.js";
+import { generateProductDeletedWarningMail } from "../mails/productDeletedWarning.js";
 import { getProducts, getProductById, createProduct, updateProduct, deleteProduct, deleteAllProducts } from "./service.products.js";
 import validateCreationParams from "./validateCreationParams.products.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
 import uuidRegex from "../utils/uuidRegex.utils.js";
+import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 
 const router = Router();
@@ -38,7 +42,7 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
-router.post('/', uploader.array('images'), async (req, res) => {
+router.post('/', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) => {
     try {
         const { name, description, category, code, price, stock } = req.body;
         if(!name || !description || !category || !code || !price || !stock) return res.status(400).json({status: 'error', message: 'Debes completar los campos requeridos.'});
@@ -64,8 +68,9 @@ router.post('/', uploader.array('images'), async (req, res) => {
             });
         };
         
-        const owner = 'user'
-        // TO DO: Set owner to user.email or user.id (req.user)
+        const user = req.user;
+
+        const owner = user.role === 'premium'? user.email : 'admin';
 
         const productInfo = {
             name, 
@@ -87,9 +92,14 @@ router.post('/', uploader.array('images'), async (req, res) => {
     }
 });
 
-router.patch('/:pid', uploader.array('images'), async (req, res) => {
+router.patch('/:pid', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) => {
     try {
-        // TO DO: Only an owner or an admin can update a product
+        const user = req.user;
+
+        if(user.role !== 'admin') {
+            const product = await getProductById(pid);
+            if(product.payload.owner !== user.email) return res.status(403).json({status: 'error', message: 'No está autorizado a modificar este producto'});
+        };
         
         const { pid } = req.params;
         if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
@@ -135,14 +145,29 @@ router.patch('/:pid', uploader.array('images'), async (req, res) => {
     }
 });
 
-router.delete('/:pid', async (req, res) => {
+router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) => {
     try {
         const { pid } = req.params;
         if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
+
+        const user = req.user;
+        const product = await getProductById(pid);
     
-        // TO DO: Only an owner or an admin can delete a product
-        // TO DO: in case of admin deletion of product that had a premium owner, it sends an email with a warning
-        
+        if(user.role !== 'admin') {
+            if(product.payload.owner !== user.email) return res.status(403).json({status: 'error', message: 'No está autorizado a eliminar este producto'}); 
+            const response = await deleteProduct(pid);
+            res.json({status: response.status, message: response.message, payload: response.payload});
+        };
+
+        const mailOptions = {
+            from: nodemailerConfig.gmail_user,
+            to: product.payload.owner,
+            subject: 'coderBackend - Alerta: El administrador eliminó su producto',
+            html: generateProductDeletedWarningMail(product.payload),
+            attachments: []
+        };
+        await transport.sendMail(mailOptions);
+
         const response = await deleteProduct(pid);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
