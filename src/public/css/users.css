@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: #F7F8F3;
+    color: #012C3D;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+  
+.container {
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    background-color: #F7F8F3;
+}
+
+.navButton-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.navButton {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    padding: 8px;
+    margin: 0 8px;
+    border-radius: 8px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+    background-color: #012C3D;
+    color: #F7F8F3;
+}
+
+.navButton:hover {
+    background-color: #F7F8F3;
+    color: #012C3D;
+    cursor: pointer;    
+}
+
+.title {
+    font-size: 3.8rem;
+    margin-top: 40px;
+    margin-bottom: 70px;
+    text-align: center;
+
+}
+
+.users-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.userRow {
+    width: 60%;
+    height: 120px;
+    border: 1px solid #012C3D;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    display: flex;
+    padding-inline: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.userRow:hover {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.user-avatar {
+    width: 100px;
+    height: 100px;
+}
+
+img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 50%;
+    margin-left: 30px;
+    padding-left: 20px;
+}
+.user-data {
+    font-size: 1.6rem;
+    margin-bottom: 3px;
+}
+.user-data:first-child {
+    font-size: 1.9rem;
+    font-weight: 600;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    margin-left: 30px;
+    gap: 10px;
+}
+.button {
+    text-decoration: none;
+    color: #012C3D;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 5px; 
+    border-radius: 5px;
+}
+
+.button:hover {
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.red {
+    background-color: rgba(255, 8, 0, 0.699);
+}

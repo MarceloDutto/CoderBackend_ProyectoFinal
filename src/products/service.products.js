@@ -73,7 +73,7 @@ export const updateProduct = async (pid, updates) => {
         if(Object.keys(product).length === 0) return {status: 'error', message: 'Producto no encontrado en la base de datos', payload: {}};
 
         if(product.thumbnail.length > 0) {
-            product.thumbnail.forEach(item => updates.thumbnail.push(item))
+            product.thumbnail.forEach(item => updates.thumbnail?.push(item))
         };
 
         Object.keys(updates).forEach(key => {

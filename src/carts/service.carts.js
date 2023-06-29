@@ -150,9 +150,10 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
 
         let allowedProducts = [];
         let rejectedProducts = [];
+        let processedProductIds = [];
         const productsInCart = cart.products;
         
-        for (const prod of productsInCart) {
+        for (let prod of productsInCart) {
             let id = prod.product.id;
             let price = prod.product.price;
             let quantity = prod.quantity;
@@ -177,7 +178,7 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
                     };
                     allowedProducts.push(item);
                     const prodIndex = cart.products.findIndex(prod => prod.product.equals(product.payload.id));
-                    cart.products.splice(prodIndex, 1);
+                    processedProductIds.push(id);
                 } catch(error) {
                     throw error;
                 }
@@ -185,9 +186,10 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
                 rejectedProducts.push(id)
             }
         };
-
+        
         if(allowedProducts.length === 0) return {statusCode: 400, status: 'error', message: 'La compra no pudo realizarse. Revise el stock antes de comprar.', payload: {rejectedProducts: rejectedProducts}};
         
+        cart.products = cart.products.filter(prod => !processedProductIds.includes(prod.product.id));
         await cm.update(cid, cart);
 
         const amount = allowedProducts.reduce((accumulator, currentValue) => {

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.13.0 | (26/6/2023)
+* 0.14.0 | (28/6/2023)
 
 <br/>
 
@@ -186,4 +186,10 @@ npm run start:dev
 
 * Se instaló CORS para eventualmente poder controlar las conexiones a la API.
 * Se validaron todos los parámetros y los datos provenientes del body para evitar posibles errores y fallos de seguridad. Además se aplicaron pruebas de regex con el mismo fin.
+* Actualización del readme.
+
+<b>Release v0.14.0 | 28/6/2023</b>
+
+* Se diseñó el resto de las vistas principales de la aplicación, tales como el listado de productos y la vista de sus detalles, la página de perfil, y el carrito para finalizar el proceso de compra.
+* Se creó la vista del panel de administrador para modificar el rol de un usuario y/o eliminarlo.
 * Actualización del readme.

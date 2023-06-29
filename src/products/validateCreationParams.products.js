@@ -20,7 +20,7 @@ const validateCreationParams = (params) => {
   
       if (
         (rule.key === 'Nprice' || rule.key === 'Nstock') &&
-        (typeof paramValue !== 'number' || isNaN(paramValue))
+        (typeof paramValue !== 'number')
       ) {
         return { isValid: false, message: rule.message };
       }
