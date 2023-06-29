@@ -5,7 +5,7 @@ const messagesCollection = 'messages';
 const messageSchema = new mongoose.Schema({
     user: String,
     message: String,
-    timestamp: Date
+    timestamp: String
 });
 
 const ChatMessage = mongoose.model(messagesCollection, messageSchema);

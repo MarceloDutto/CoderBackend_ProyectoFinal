@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.15.0 | (29/6/2023)
+* 0.16.0 | (29/6/2023)
 
 <br/>
 
@@ -198,4 +198,10 @@ npm run start:dev
 
 * Se configuraron las politicas de acceso a los endpoints y las vistas.
 * Se dio forma a la lógica de logout, con eliminación del token del navegador.
+* Actualización del readme.
+
+<b>Release v0.16.0 | 29/6/2023</b>
+
+* Se implementó la biblioteca Socket.IO para establecer una conexión a través de un servidor de WebSocket.
+* Se diseñó la interfaz del chat.
 * Actualización del readme.

@@ -128,7 +128,17 @@ router.get('/admin', handlePolicies(['ADMIN']), (req, res) => {
     res.render('users', {
         title: 'Panel de usuarios',
         style: 'users.css'
-    })
+    });
+});
+
+router.get('/chat', handlePolicies(['USER', 'ADMIN', 'ADMIN']), (req, res) => {
+    const user = req.user;
+
+    res.render('chat', {
+        title: 'Chat',
+        style: 'chat.css',
+        user
+    });
 });
 
 export default router;
