@@ -13,6 +13,9 @@ const router = (app) => {
     app.use('/api/auth', authController);
     app.use('/', viewsController);
     app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerSpecs));
+    app.use('*', function (req, res) {
+        res.status(404).render('notFound', {title: "Página no encontrada"});
+    })
 };
 
 export default router;

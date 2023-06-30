@@ -24,7 +24,7 @@ router.get('/github/callback', passport.authenticate('github', {session: false})
         const response = await externalAuthentication({email: email});
         res.cookie('authToken', response, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: 'Usuario autenticado con Github'});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
         if(response.status === 'error') return res.status(400).json({status: response.status, message: response.message, payload: {}});
         res.cookie('authToken', response.payload, {maxAge: 900000, httpOnly: true}).json({status: response.status, message: response.message});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -67,7 +67,7 @@ router.post('/forgotPassword', async (req, res) => {
         const response = await forgotPassword(email);
         res.json({status: response.status, message: response.message});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -84,7 +84,8 @@ router.post('/resetPassword', async (req, res) => {
         const response = await resetPassword(token, password);
         res.json({status: response.status, message: response.message});
     } catch(error) {
-        throw error;
+        req.logger.error(error);
+        res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
 

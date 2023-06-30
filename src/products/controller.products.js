@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         const response = await getProducts(limit, page, query, sort);
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -39,7 +39,7 @@ router.get('/:pid', async (req, res) => {
         const response = await getProductById(pid);
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -89,7 +89,7 @@ router.post('/', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']),
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
 
     } catch(error) {
-        console.log(error)
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -141,7 +141,7 @@ router.patch('/:pid', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIU
         const response = await updateProduct(pid, updates);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -174,7 +174,7 @@ router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) =>
         const response = await deleteProduct(pid);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -186,7 +186,7 @@ router.delete('/', async (req, res) => {
         const response = await deleteAllProducts();
         res.json({status: 'success', message: response.message});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });

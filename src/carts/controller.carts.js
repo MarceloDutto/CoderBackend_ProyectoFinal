@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
         const response = await getCarts();
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -25,7 +25,7 @@ router.get('/:cid', async (req, res) => {
         const response = await getCartById(cid);
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
         const response = await createCart();
         res.status(201).json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -54,7 +54,7 @@ router.post('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), 
         const response = await addProductToCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -86,7 +86,7 @@ router.put('/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, re
         const response = await updateProductsfromCart(cid, products);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -103,7 +103,7 @@ router.put('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), a
         const response = await updateQuantity(cid, pid, quantity);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -116,7 +116,7 @@ router.delete('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN'])
         const response = await deleteProductfromCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -129,7 +129,7 @@ router.delete('/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req,
         const response = await deleteProductsfromCart(cid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });
@@ -144,7 +144,7 @@ router.get('/:cid/purchase', handlePolicies(['USER, PREMIUM, ADMIN']), async (re
         const response = await purchaseProductsInCart(cid, user);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
 });

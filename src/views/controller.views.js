@@ -71,7 +71,7 @@ router.get('/products', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req
             nextPageLink: data.payload.hasNextPage? data.payload.nextLink : ''
         });
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.render('products', {
             title: 'Productos',
             style: 'products.css',
@@ -116,7 +116,7 @@ router.get('/cart/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (re
             amount
         });
     } catch(error) {
-        console.log(error);
+        req.logger.error(error);
         res.render('cart', {
             showProducts,
             style: 'cart.css'

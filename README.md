@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.17.0 | (30/6/2023)
+* 0.18.0 | (30/6/2023)
 
 <br/>
 
@@ -95,6 +95,8 @@ npm run test
 ````
 
 El test simula el registro de usuarios, autenticación, creación y actualización de productos; y acciones relacionadas al carrito de compras, tales como agregar o eliminar un item.
+
+Es importante que verifique que el campo "TEST_EMAIL" del archivo de variables de entorno .env.sample, coincida con el email del *mockAdmin* contenido en el archivo supertest.test.js. Este user de prueba hará las funciones de un administrador; por lo que si no coinciden, el test no funcionará.
 
 Para más detalles referirse a la carpeta '/test'.
 
@@ -226,4 +228,11 @@ Para más detalles referirse a la carpeta '/test'.
 * Se utilizó la biblioteca *faker* para realizar mockings de datos.
 * Se creó un módulo de mocking que genera productos falsos con fines de prueba.
 * Se instalaron las dependencias *Mocha*, *Chai* y *Supertest* para realizar pruebas integrales de los recursos de la API.
+* Actualización del readme.
+
+<b>Release v0.18.0 | 30/6/2023</b>
+
+* Se implementó la funcionalidad de registro de eventos utilizando la biblioteca Winston.
+* Se agregaron mensajes de aviso y error personalizados, los cuales se presentan en la consola con colores distintivos para cada tipo de mensaje.
+* A partir de un cierto nivel, los errores se registran en un archivo llamado errors.log.
 * Actualización del readme.
