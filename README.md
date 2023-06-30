@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.16.0 | (29/6/2023)
+* 0.17.0 | (30/6/2023)
 
 <br/>
 
@@ -82,6 +82,21 @@ npm install
 npm run start:dev
 ````
 * Luego conectarse a la API usando Postman al puerto 3000.
+
+<br/>
+
+
+## :test_tube: Testing
+
+* Para realizar un test integral de la API con mocha, chai y supertest, ingrese:
+
+````
+npm run test
+````
+
+El test simula el registro de usuarios, autenticación, creación y actualización de productos; y acciones relacionadas al carrito de compras, tales como agregar o eliminar un item.
+
+Para más detalles referirse a la carpeta '/test'.
 
 <br/>
 
@@ -204,4 +219,11 @@ npm run start:dev
 
 * Se implementó la biblioteca Socket.IO para establecer una conexión a través de un servidor de WebSocket.
 * Se diseñó la interfaz del chat.
+* Actualización del readme.
+
+<b>Release v0.17.0 | 30/6/2023</b>
+
+* Se utilizó la biblioteca *faker* para realizar mockings de datos.
+* Se creó un módulo de mocking que genera productos falsos con fines de prueba.
+* Se instalaron las dependencias *Mocha*, *Chai* y *Supertest* para realizar pruebas integrales de los recursos de la API.
 * Actualización del readme.

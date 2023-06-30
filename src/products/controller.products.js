@@ -1,10 +1,12 @@
 import { Router } from "express";
 import multer from "multer";
 import { imgFileFilter, prodImgStorage } from "../utils/multer.utils.js";
+import appConfig from "../config/app.config.js";
 import { transport } from "../utils/nodemailer.utils.js";
 import nodemailerConfig from "../config/nodemailer.config.js";
 import { generateProductDeletedWarningMail } from "../mails/productDeletedWarning.js";
 import { getProducts, getProductById, createProduct, updateProduct, deleteProduct, deleteAllProducts } from "./service.products.js";
+import { generateProduct } from "../utils/faker.utils.js";
 import validateCreationParams from "./validateCreationParams.products.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
 import uuidRegex from "../utils/uuidRegex.utils.js";
@@ -95,21 +97,20 @@ router.post('/', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']),
 router.patch('/:pid', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) => {
     try {
         const user = req.user;
-
+        const { pid } = req.params;
+        if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
+        
+        const { name, description, category, code, price, stock } = req.body;
+        const Nprice = Number(price);
+        const Nstock = Number(stock)
+        
+        const paramsValidation = validateCreationParams({name, description, category, code, Nprice, Nstock});
+        if(!paramsValidation.isValid) return res.status(400).json({status: 'error', message: paramsValidation.message});
+        
         if(user.role !== 'admin') {
             const product = await getProductById(pid);
             if(product.payload.owner !== user.email) return res.status(403).json({status: 'error', message: 'No está autorizado a modificar este producto'});
         };
-        
-        const { pid } = req.params;
-        if(!(objectIdRegex.test(pid) || uuidRegex.test(pid))) return res.status(400).json({status: 'error', message: 'El id del producto no tiene un formato válido'});
-
-        const { name, description, category, code, price, stock } = req.body;
-        const Nprice = Number(price);
-        const Nstock = Number(stock)
-
-        const paramsValidation = validateCreationParams({name, description, category, code, Nprice, Nstock});
-        if(!paramsValidation.isValid) return res.status(400).json({status: 'error', message: paramsValidation.message});
 
         if(req.fileTypeError) return res.status(400).json({status: 'error', message:req.fileTypeError}); // multer files validation
         
@@ -159,14 +160,16 @@ router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) =>
             res.json({status: response.status, message: response.message, payload: response.payload});
         };
 
-        const mailOptions = {
-            from: nodemailerConfig.gmail_user,
-            to: product.payload.owner,
-            subject: 'coderBackend - Alerta: El administrador eliminó su producto',
-            html: generateProductDeletedWarningMail(product.payload),
-            attachments: []
+        if(user.email !== appConfig.test_email) {
+            const mailOptions = {
+                from: nodemailerConfig.gmail_user,
+                to: product.payload.owner,
+                subject: 'coderBackend - Alerta: El administrador eliminó su producto',
+                html: generateProductDeletedWarningMail(product.payload),
+                attachments: []
+            };
+            await transport.sendMail(mailOptions);
         };
-        await transport.sendMail(mailOptions);
 
         const response = await deleteProduct(pid);
         res.json({status: response.status, message: response.message, payload: response.payload});
@@ -186,6 +189,14 @@ router.delete('/', async (req, res) => {
         console.log(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
+});
+
+router.get('/test/mockingProducts', async (req, res) => {
+    let mockedProducts = [];
+    for(let i = 0; i < 100; i++) {
+        mockedProducts.push(generateProduct());
+    };
+    res.json({status: 'success', message: 'Productos generados', payload: mockedProducts})
 });
 
 export default router;

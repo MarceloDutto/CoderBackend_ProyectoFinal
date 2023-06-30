@@ -5,6 +5,7 @@ import { createHash } from "../utils/bcrypt.utils.js";
 import { generateToken } from '../utils/jwt.utils.js';
 import userDTO from "../DTOs/user.dto.js";
 import __dirname from '../utils/dirname.utils.js';
+import appConfig from "../config/app.config.js";
 
 
 const um = new UserManager();
@@ -68,6 +69,11 @@ export const createUser = async (userInfo) => {
             pass = createHash(password);
         }; 
 
+        let role = 'user';
+        if(email === appConfig.test_email) {
+            role = 'admin'
+        };
+
         const newUserInfo = {
             first_name,
             last_name,
@@ -75,6 +81,7 @@ export const createUser = async (userInfo) => {
             profile_picture,
             email,
             password: pass,
+            role,
             googleId: googleId? googleId : '',
             cart: userCart.payload.id,
             last_connection: new Date()
