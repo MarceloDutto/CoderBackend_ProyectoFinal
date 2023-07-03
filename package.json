@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha test/supertest.test.js",
-    "start:dev": "nodemon src/app.js"
+    "start:local": "set NODE_ENV=local&& nodemon src/app.js",
+    "start:dev": "set NODE_ENV=development&& nodemon src/app.js"
   },
   "repository": {
     "type": "git",

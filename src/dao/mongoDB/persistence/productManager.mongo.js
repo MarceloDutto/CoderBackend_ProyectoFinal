@@ -5,7 +5,24 @@ class ProductManager {
     getAll = async (filter, options) => {
         try {
             const data = await Product.paginate(filter, options);
-            return data? data : [];
+            if(data.docs.length === 0) return {};
+
+            const query = filter.category;
+            
+            const response = {
+                status: 'success',
+                payload: data.docs,
+                totalPages: data.totalPages,
+                prevPage: data.prevPage,
+                nextPage: data.nextPage,
+                page: data.page,
+                hasPrevPage: data.hasPrevPage,
+                hasNextPage: data.hasNextPage,
+                prevLink: `?query=${query}&sort=${options.sort}&limit=${options.limit}&page=${data.prevPage}`,
+                nextLink: `?query=${query}&sort=${options.sort}&limit=${options.limit}&page=${data.nextPage}`
+            };
+            
+            return response
         } catch(error) {
             throw error;
         }

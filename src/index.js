@@ -27,6 +27,4 @@ app.use(addLogger);
 initializePassport();
 app.use(passport.initialize());
 
-MongoConnection.getInstance();
-
 router(app);

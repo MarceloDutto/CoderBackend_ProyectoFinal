@@ -1,5 +1,5 @@
 import fs from 'fs';
-import UserManager from "../dao/mongoDB/persistence/userManager.mongo.js";
+import { usersDAO } from '../dao/factory.dao.js';
 import { createCart, deleteCart } from "../carts/service.carts.js";
 import { createHash } from "../utils/bcrypt.utils.js";
 import { generateToken } from '../utils/jwt.utils.js';
@@ -7,8 +7,7 @@ import userDTO from "../DTOs/user.dto.js";
 import __dirname from '../utils/dirname.utils.js';
 import appConfig from "../config/app.config.js";
 
-
-const um = new UserManager();
+const um = usersDAO;
 
 export const getUsers = async () => {
     try {

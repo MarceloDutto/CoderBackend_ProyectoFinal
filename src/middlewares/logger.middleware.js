@@ -1,4 +1,4 @@
-import logger from "../logger/local.logger.js";
+import logger from "../logger/factory.logger.js";
 
 const addLogger = (req, res, next) => {
     req.logger = logger;

@@ -1,6 +1,7 @@
-import ChatManager from "../dao/mongoDB/persistence/chatManager.mongo.js";
+import __dirname from '../utils/dirname.utils.js';
+import { chatDAO } from '../dao/factory.dao.js';
 
-const chm = new ChatManager();
+const chm = chatDAO;
 
 export const getAllMessages = async () => {
     try {

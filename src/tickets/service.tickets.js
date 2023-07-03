@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
-import TicketManager from "../dao/mongoDB/persistence/ticketManager.mongo.js";
+import __dirname from '../utils/dirname.utils.js';
+import { ticketsDAO } from '../dao/factory.dao.js';
 
-const tm = new TicketManager();
+const tm = ticketsDAO;
 
 export const createTicket = async (ticketInfo) => {
     try {
@@ -10,7 +11,7 @@ export const createTicket = async (ticketInfo) => {
         //devuelve el code con un uuid único verificado
         let code;
         let unique = false;
-        while(unique === false) {
+        while(!unique) {
             code = uuidv4();
             unique = !tickets.some(ticket => ticket.code === code);
         };

@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.18.0 | (30/6/2023)
+* 0.19.0 | (3/7/2023)
 
 <br/>
 
@@ -76,7 +76,17 @@ npm install
 
 ## :desktop_computer: Ejecución
 
-* Para ejecutar la aplicación en modo de desarrollo se debe correr el siguiente script:
+* Para ejecutar la aplicación en modo local, con sistema de persistencia basado en *file system* se debe correr el siguiente script:
+
+````
+npm run start:local
+````
+* Luego conectarse a la API usando Postman al puerto 3000.
+
+<br/>
+<br/>
+
+* Para ejecutar la aplicación en modo de desarrollo, con persistencia en base de datos MongoDB, se debe correr el siguiente script:
 
 ````
 npm run start:dev
@@ -232,7 +242,15 @@ Para más detalles referirse a la carpeta '/test'.
 
 <b>Release v0.18.0 | 30/6/2023</b>
 
-* Se implementó la funcionalidad de registro de eventos utilizando la biblioteca Winston.
+* Se implementó la funcionalidad de registro de eventos utilizando la biblioteca *Winston*.
 * Se agregaron mensajes de aviso y error personalizados, los cuales se presentan en la consola con colores distintivos para cada tipo de mensaje.
 * A partir de un cierto nivel, los errores se registran en un archivo llamado errors.log.
+* Actualización del readme.
+
+<b>Release v0.19.0 | 3/7/2023</b>
+
+* Se implementó el modelo de persistencia local utilizando el sistema de gestión de archivos de *file system*.
+* Se configuraron los entornos de desarrollo *local* y *development*.
+* Se utilizó el patrón de diseño Factory para manejar la elección de modelo de persistencia según el entorno de desarrollo en el que se esté trabajando.
+* Se uitlizó el mismo criterio para configuar la funcionalidad del logger.
 * Actualización del readme.

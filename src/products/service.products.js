@@ -1,9 +1,9 @@
 import fs from 'fs';
 import __dirname from '../utils/dirname.utils.js';
-import ProductManager from "../dao/mongoDB/persistence/productManager.mongo.js";
+import { productsDAO } from '../dao/factory.dao.js';
 import productsDTO from "../DTOs/products.dto.js";
 
-const pm = new ProductManager();
+const pm = productsDAO;
 
 export const getProducts = async (limit, page, query, sort) => {
     try {
@@ -19,23 +19,12 @@ export const getProducts = async (limit, page, query, sort) => {
             sort: sortingOptions
         };
        
-        const data = await pm.getAll(filter, options);
-        if(data.docs.length === 0) return {message: 'La base de datos no contiene productos', payload: {}};
+        const response = await pm.getAll(filter, options);
+        if(response.payload.length === 0) return {message: 'La base de datos no contiene productos', payload: {}};
 
-        const mappedData = data.docs.map(doc => new productsDTO(doc));
+        const mappedProducts = response.payload.map(doc => new productsDTO(doc));
+        response.payload = mappedProducts;
 
-        const response = {
-            status: 'success',
-            payload: mappedData,
-            totalPages: data.totalPages,
-            prevPage: data.prevPage,
-            nextPage: data.nextPage,
-            page: data.page,
-            hasPrevPage: data.hasPrevPage,
-            hasNextPage: data.hasNextPage,
-            prevLink: `?query=${query}&sort=${sort}&limit=${options.limit}&page=${data.prevPage}`,
-            nextLink: `?query=${query}&sort=${sort}&limit=${options.limit}&page=${data.nextPage}`
-        };
         return {message: 'Productos encontrados', payload: response};
     } catch(error) {
         throw error;

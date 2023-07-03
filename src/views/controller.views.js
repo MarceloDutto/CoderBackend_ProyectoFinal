@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { getProducts } from "../products/service.products.js"; 
+import { getProducts, getProductById } from "../products/service.products.js"; 
 import { getCartById } from "../carts/service.carts.js";
 import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
 
 router.get('/', handlePolicies('PUBLIC'), (req, res) => {
-    res.redirect('/products')
+    res.redirect('/login')
 });
 
 router.get('/signup', handlePolicies('PUBLIC'), (req, res) => {
@@ -47,15 +47,15 @@ router.get('/profile', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), (req, res) 
 });
 
 router.get('/products', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
-    try {
-        const user = req.user;
-        const limit = req.query.limit || 5;
-        const page = req.query.page || 1;
-        const query = req.query.query || null;
-        const sort = req.query.sort || null;
-        let products = [];
-        let showProducts = false;
+    const user = req.user;
+    const limit = req.query.limit || 5;
+    const page = req.query.page || 1;
+    const query = req.query.query || null;
+    const sort = req.query.sort || null;
+    let products = [];
+    let showProducts = false;
     
+    try {
         const data = await getProducts(limit, page, query, sort);
         products = data.payload.payload;
 
@@ -96,8 +96,19 @@ router.get('/cart/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (re
 
     try {
         const data = await getCartById(cid);
-        const cart = data.payload;
-        let products = cart.products
+        const cart = {...data.payload};
+        let products = [];
+        
+        for(let prod of cart.products) {
+            let info = await getProductById(prod.product);
+            let data = {
+                product: {...info.payload},
+                quantity: prod.quantity
+            }
+            products.push(data);
+        };
+        
+
         if(products.length > 0) {
             showProducts = true;
             const total = products.reduce((accumulator, currentValue) => {
@@ -111,11 +122,12 @@ router.get('/cart/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (re
             title: 'Mi carrito',
             style: 'cart.css',
             showProducts,
-            products: products.map(prod => prod.toJSON()),
+            products,
             cart,
             amount
         });
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.render('cart', {
             showProducts,

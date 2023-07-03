@@ -31,17 +31,7 @@ socket.on('messageLogs', data => {
     let log = document.querySelector("#messageLogs");
     let messages = "";
     data.forEach(message => {
-        console.log(message)
         messages = messages + `<span>${message.user} dice: </span> ${message.message} - <span class="timestamp">${message.timestamp}</span></br> `
-    });
-    log.innerHTML = messages;
-});
-
-socket.on("sendLog", data => {
-    let log = document.querySelector("#messageLogs");
-    let messages = "";
-    data.forEach(message => {
-        messages = messages + `${message.user} dice: ${message.message} </br> `
     });
     log.innerHTML = messages;
 });

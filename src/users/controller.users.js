@@ -79,6 +79,7 @@ router.post('/', imgUploader.single('image'), handlePolicies(['PUBLIC']), async 
         const response = await createUser(userInfo);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -107,6 +108,7 @@ router.post('/:uid/documents', handlePolicies(['USER']), docUploader, async (req
         const response = await uploadDocumentation(uid, files);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }

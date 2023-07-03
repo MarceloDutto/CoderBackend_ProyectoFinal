@@ -26,6 +26,7 @@ router.get('/', async (req, res) => {
         const response = await getProducts(limit, page, query, sort);
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -141,6 +142,7 @@ router.patch('/:pid', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIU
         const response = await updateProduct(pid, updates);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -153,6 +155,7 @@ router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) =>
 
         const user = req.user;
         const product = await getProductById(pid);
+        if(Object.keys(product).length === 0) return {status: 'error', message: 'Producto no encontrado en la base de datos', payload: {}};
     
         if(user.role !== 'admin') {
             if(product.payload.owner !== user.email) return res.status(403).json({status: 'error', message: 'No está autorizado a eliminar este producto'}); 
@@ -160,7 +163,7 @@ router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) =>
             res.json({status: response.status, message: response.message, payload: response.payload});
         };
 
-        if(user.email !== appConfig.test_email) {
+        if(user.email !== appConfig.test_email && product.payload.owner !== 'admin') {
             const mailOptions = {
                 from: nodemailerConfig.gmail_user,
                 to: product.payload.owner,
@@ -174,6 +177,7 @@ router.delete('/:pid', handlePolicies(['ADMIN', 'PREMIUM']), async (req, res) =>
         const response = await deleteProduct(pid);
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }

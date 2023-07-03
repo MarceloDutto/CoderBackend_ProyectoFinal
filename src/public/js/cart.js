@@ -4,6 +4,7 @@ const purchaseButton = document.querySelector("#purchase-button");
 if(purchaseButton) {
     purchaseButton.addEventListener('click', e => {
         const cartId = purchaseButton.getAttribute('cart-id');
+        console.log(cartId)
         e.preventDefault();
 
         const url = `/api/carts/${cartId}/purchase`;

@@ -12,6 +12,7 @@ router.get('/', async (req, res) => {
         const response = await getCarts();
         res.json({status: 'success', message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -54,6 +55,7 @@ router.post('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), 
         const response = await addProductToCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -116,6 +118,7 @@ router.delete('/:cid/product/:pid', handlePolicies(['USER', 'PREMIUM', 'ADMIN'])
         const response = await deleteProductfromCart(cid, pid);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }
@@ -134,7 +137,7 @@ router.delete('/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req,
     }
 });
 
-router.get('/:cid/purchase', handlePolicies(['USER, PREMIUM, ADMIN']), async (req, res) => {
+router.get('/:cid/purchase', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
     try {
         const { cid } = req.params;
         if(!(objectIdRegex.test(cid) || uuidRegex.test(cid))) return res.status(400).json({status: 'error', message: 'El id del carrito no tiene un formato válido'});
@@ -144,6 +147,7 @@ router.get('/:cid/purchase', handlePolicies(['USER, PREMIUM, ADMIN']), async (re
         const response = await purchaseProductsInCart(cid, user);
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }

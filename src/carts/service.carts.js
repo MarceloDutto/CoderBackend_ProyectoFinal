@@ -1,9 +1,10 @@
-import CartManager from "../dao/mongoDB/persistence/cartManager.mongo.js";
+import __dirname from '../utils/dirname.utils.js';
+import { cartsDAO } from '../dao/factory.dao.js';
 import { getProductById, updateProduct } from "../products/service.products.js";
 import { createTicket } from "../tickets/service.tickets.js";
 import cartDTO from "../DTOs/cart.dto.js";
 
-const cm = new CartManager();
+const cm = cartsDAO;
 
 export const getCarts = async () => {
     try {
@@ -45,7 +46,13 @@ export const addProductToCart = async (cid, pid) => {
         const product = await getProductById(pid);
         if(Object.keys(product.payload).length === 0) return {statusCode: 400, status: 'error', message: 'Producto no encontrado en la base de datos', payload: {}};
 
-        const prodIndex = cart.products.findIndex(prod => prod.product.equals(pid));
+        const prodIndex = cart.products.findIndex(prod => {
+            if(typeof prod.product === 'string') {
+                return prod.product === pid;
+            } else {
+                return prod.product.equals(pid);
+            }
+        });
 
         if(prodIndex !== -1) {
             cart.products[prodIndex].quantity++;
@@ -97,7 +104,13 @@ export const updateQuantity = async (cid, pid, quantity) => {
 
         if(cart.products.length === 0) return {statusCode: 400, status: 'error', message: 'El carrito no contiene productos', payload: {}};
 
-        const prodIndex = cart.products.findIndex(prod => prod.product.equals(pid));
+        const prodIndex = cart.products.findIndex(prod => {
+            if(typeof prod.product === 'string') {
+                return prod.product === pid;
+            } else {
+                return prod.product.equals(pid);
+            }
+        });
         if(prodIndex === -1) return {statusCode: 400, status: 'error', message: 'El producto no se encontró en el carrito', payload: {}};
 
         cart.products[prodIndex].quantity = quantity;
@@ -115,7 +128,13 @@ export const deleteProductfromCart = async (cid, pid) => {
 
         if(cart.products.length === 0) return {statusCode: 400, status: 'error', message: 'El carrito no contiene productos', payload: {}};
 
-        const prodIndex = cart.products.findIndex(prod => prod.product.equals(pid));
+        const prodIndex = cart.products.findIndex(prod => {
+            if(typeof prod.product === 'string') {
+                return prod.product === pid;
+            } else {
+                return prod.product.equals(pid);
+            }
+        });
         if(prodIndex === -1) return {statusCode: 400, status: 'error', message: 'El producto no se encontró en el carrito', payload: {}};
 
         cart.products.splice(prodIndex, 1);
@@ -151,7 +170,16 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
         let allowedProducts = [];
         let rejectedProducts = [];
         let processedProductIds = [];
-        const productsInCart = cart.products;
+        let productsInCart = []
+
+        for(let prod of cart.products) {
+            let info = await getProductById(prod.product);
+            let data = {
+                product: {...info.payload},
+                quantity: prod.quantity
+            }
+            productsInCart.push(data);
+        };
         
         for (let prod of productsInCart) {
             let id = prod.product.id;
@@ -188,7 +216,7 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
         
         if(allowedProducts.length === 0) return {statusCode: 400, status: 'error', message: 'La compra no pudo realizarse. Revise el stock antes de comprar.', payload: {rejectedProducts: rejectedProducts}};
         
-        cart.products = cart.products.filter(prod => !processedProductIds.includes(prod.product.id));
+        cart.products = productsInCart.filter(prod => !processedProductIds.includes(prod.product.id));
         await cm.update(cid, cart);
 
         const amount = allowedProducts.reduce((accumulator, currentValue) => {
@@ -200,6 +228,8 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
             amount,
             purchaser: purchaser.fullname
         };
+
+        console.log(ticketInfo)
 
         const purchaseTicket = await createTicket(ticketInfo);
         if(rejectedProducts.length > 0) return {statusCode: 200, status: 'success', message: 'Algunos productos de tu carrito no tienen stock. La compra fue realizada exitosamente con los productos disponibles', payload: purchaseTicket};
