@@ -90,6 +90,7 @@ router.post('/', uploader.array('images'), handlePolicies(['ADMIN', 'PREMIUM']),
         res.status(response.statusCode).json({status: response.status, message: response.message, payload: response.payload});
 
     } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }

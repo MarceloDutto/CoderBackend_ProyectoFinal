@@ -87,6 +87,24 @@ body {
     margin-left: 20px;
 }
 
+.btn-delete-product {
+    width: 60%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    padding: 8px;
+    background-color: #F7F8F3;
+    color: #012C3D;
+    border: 1px solid #012C3D;
+    border-radius: 8px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+}
+
+.btn-delete-product:hover {
+    background-color: #012C3D;
+    color: #F7F8F3;
+    cursor: pointer;
+}
+
 .product-features {
     font-size: 1.6rem;
     margin-bottom: 5px;
@@ -114,4 +132,22 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 50px;
+}
+
+.btn-empty-cart {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.6rem;
+    padding: 8px;
+    background-color: #F7F8F3;
+    color: #012C3D;
+    border: 1px solid #012C3D;
+    border-radius: 8px;
+    box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+}
+
+.btn-empty-cart:hover {
+    background-color: #012C3D;
+    color: #F7F8F3;
+    cursor: pointer;
 }

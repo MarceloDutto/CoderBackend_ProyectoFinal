@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="navButton-container">
+        <a href="/profile" ><button class="navButton">Ver mi perfil</button></a>
+        <a href="/products"><button class="navButton">Ir a productos</button></a> 
+        <a href="/chat" ><button class="navButton">Ir al chat</button></a>
+    </div>
+    <h1 class="page-title">Aquí está el comprobante de tu compra</h1>
+
+    <div class="ticket-container">
+        {{#if showTicket}}
+            <div class="ticket-header">
+                <h3 class="ticket-name">CoderBackend e-commerce</h3>
+                <h4 class="ticket-title">Ticket de compra</h4>
+            </div>
+            <div class="ticket-body">
+                <div class="ticket-info">
+                    <p class="ticket-p">Ticket: {{code}} </p>
+                    <p class="ticket-p">Nombre: {{userName}} </p>
+                    <p class="ticket-p">Fecha de emisión: {{purchase_datetime}} </p>
+                </div>
+                <div class="ticket-content" ticket-info="{{ticket}}" id="t-content">
+                    {{#each products}}
+                    <div class="list-item">
+                        <p class="item-info">{{this.item.name}}</p>
+                        <p class="item-info">X {{this.item.quantity}}</p>
+                        <p class="item-strong">$ {{this.subtotal}}</p>
+                    </div>
+                    {{/each}}
+
+                    <div class="summary">
+                        <h3 class="list-total">Total de la compra: {{amount}}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="ticket-footer">
+                <h3>Gracias por su compra</h3>
+                <p class="ticket-p">En breve nos comunicaremos para coordinar la entrega de su producto</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="emailButton" user="{{userId}}" ticket-id="{{code}}" id="mail-button">Enviar por e-mail</button>
+        </div>
+    {{else}}
+            <p class="error-text">¡Lo sentimos! Hubo un error al intentar mostrar tu ticket. 😔</p>
+    {{/if}}
+</div>
+
+<script src="/js/ticket.js"></script>

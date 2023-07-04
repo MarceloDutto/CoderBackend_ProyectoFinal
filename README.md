@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.19.0 | (3/7/2023)
+* 0.20.0 | (3/7/2023)
 
 <br/>
 
@@ -17,6 +17,12 @@ El proyecto final consiste en la creación de una API REST con la que se pueden 
 El servidor está basado en un diseño de capas bien definidas y para su funcionamiento se utilizaron patrones de diseño de uso frecuente, tales como Singleton, Repository, Factory, DTO, entre otros. Se utilizan file system y base de datos como modelos de persistencia, e incluye vistas de las principales funcionalidades creadas con un motor de plantillas.
 
 El propósito de este repositorio y el de esta API, es educacional y de prueba. No se admite su uso de forma comercial.
+
+<br/>
+
+## :rocket: Deploy
+
+proximamente...
 
 <br/>
 
@@ -254,3 +260,20 @@ Para más detalles referirse a la carpeta '/test'.
 * Se utilizó el patrón de diseño Factory para manejar la elección de modelo de persistencia según el entorno de desarrollo en el que se esté trabajando.
 * Se uitlizó el mismo criterio para configuar la funcionalidad del logger.
 * Actualización del readme.
+
+<b>Release v0.20.0 | 3/7/2023</b>
+
+* Se finalizó el diseño de la interfaz de todo el proceso de compra.
+* Se desarrolló la posibilidad de que el usuario pueda recibir un mail con el comprobante de compra.
+* Se utilzó la biblioteca *Sweet Alert 2* para generar notificaciones que permiten confirmar las interacciones con la aplicación.
+* Se hicieron modificaciones para mejorar la interacción del usuario desde las vsitas hacia los endpoints.
+* Se realizaron correcciones y mejoras significativas y se perfeccionaron los detalles finales para garantizar el mejor resultado posible.
+* Se finalizó el documento readme.
+
+## :bust_in_silhouette: Autor
+
+Esta API fue desarrollada por Marcelo Dutto, etudiante de la carrera full-stack Developer en Coderhouse.
+
+Para ver el perfil de github, siga [este](https://github.com/MarceloDutto) enlace.
+
+Para conectar a través de linkendin, presione [aquí](https://www.linkedin.com/in/marcelodutto/).

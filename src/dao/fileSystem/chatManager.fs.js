@@ -9,18 +9,18 @@ class ChatManager {
 
     getAllMessages = async () => {
         try {
-            if(!existsSync(this.path)) {
+            if(existsSync(this.path)) {
+                const stats = await promises.stat(this.path);
+                if(stats.size !== 0) {
+                    const data = await promises.readFile(this.path, 'utf-8');
+                    this.messages = JSON.parse(data);
+                } else {
+                    this.messages = [];
+                };
+            } else {
                 this.messages = [];
-                return this.messages;
             };
-
-            const stats = await promises.stat(this.path);
-
-            if(stats.size === 0) {
-                this.messages = [];
-                return this.messages;
-            };
-
+        
             const data = await promises.readFile(this.path, 'utf-8');
             this.messages = JSON.parse(data);
             return this.messages;      

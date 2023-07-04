@@ -4,6 +4,16 @@ import { ticketsDAO } from '../dao/factory.dao.js';
 
 const tm = ticketsDAO;
 
+export const getTicketByCode = async (code) => {
+    try {
+        const ticket = await tm.getByCode(code);
+        if(Object.keys(ticket).length === 0) return {status: 'error', message: 'Ticket no encontrado', payload: {}};
+        return {status: 'success', message: 'Ticket encontrado', payload: ticket};
+    } catch(error) {
+        throw error;
+    }
+};
+
 export const createTicket = async (ticketInfo) => {
     try {
         const tickets = await tm.getAll();

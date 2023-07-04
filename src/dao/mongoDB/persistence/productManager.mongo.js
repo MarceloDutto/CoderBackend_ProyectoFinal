@@ -7,8 +7,9 @@ class ProductManager {
             const data = await Product.paginate(filter, options);
             if(data.docs.length === 0) return {};
 
-            const query = filter.category;
-            
+            const query = Object.keys(filter).length === 0 ? null : filter;
+            const sort = Object.keys(options.sort).length === 0 ? null : options.sort;
+             
             const response = {
                 status: 'success',
                 payload: data.docs,
@@ -18,8 +19,8 @@ class ProductManager {
                 page: data.page,
                 hasPrevPage: data.hasPrevPage,
                 hasNextPage: data.hasNextPage,
-                prevLink: `?query=${query}&sort=${options.sort}&limit=${options.limit}&page=${data.prevPage}`,
-                nextLink: `?query=${query}&sort=${options.sort}&limit=${options.limit}&page=${data.nextPage}`
+                prevLink: `?query=${query}&sort=${sort}&limit=${options.limit}&page=${data.prevPage}`,
+                nextLink: `?query=${query}&sort=${sort}&limit=${options.limit}&page=${data.nextPage}`
             };
             
             return response

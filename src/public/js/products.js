@@ -16,7 +16,6 @@ btn_addToCart.forEach(btn => {
 
 const addToCart = async (pid) => {
     try {
-        console.log(pid)
         const url = `/api/carts/${cartId}/product/${pid}`;
         const headers = {
             'Content-Type': 'application/json'
@@ -28,6 +27,16 @@ const addToCart = async (pid) => {
                 headers,
                 method
             });
+
+        Swal.fire({
+            text: `Producto agregado al carrito `,
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: false,
+            icon: "success"
+        });
     } catch (error) {
         console.log(error);
     }

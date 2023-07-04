@@ -17,6 +17,7 @@
                         <p class="product-features"><strong>Nombre: {{this.product.name}}</strong></p>
                         <p class="product-features">Cantidad: {{this.quantity}}</p>
                         <p class="product-features">Precio x unidad: $ {{this.product.price}}</p>
+                        <button class="btn-delete-product" prodId="{{this.product.id}}" >Eliminar producto </button>
                     </div>
                 </div>
             {{/each}}
@@ -30,9 +31,13 @@
         <h2>Total de la compra: {{amount}} </h2>
         <button class="navButton" id="purchase-button" cart-id="{{cart.id}}">Continuar con la compra</button>
     </div>
+    <div class="actions">
+        <button class="btn-empty-cart" id="empty-cart">Vaciar carrito</button>
+    </div>
     {{else}}
         <div></div>
     {{/if}}
 </div>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/cart.js"></script>

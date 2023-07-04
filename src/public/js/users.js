@@ -96,7 +96,14 @@ fetch(url, {
 .then(response => response.json())
 .then(data => {
     console.log(data.message);
-    getUsers();
+    Swal.fire({
+        text: data.message,
+    })
+    .then((result) => {
+        if(result.isConfirmed) {
+            getUsers();
+        }
+    })
 })
 .catch(error => console.log(error))
 };
@@ -114,7 +121,15 @@ fetch(url, {
 .then(response => response.json())
 .then(data => {
     console.log(data.message);
-    getUsers();
+    Swal.fire({
+        text: data.message,
+        icon: 'success'
+    })
+    .then((result) => {
+        if(result.isConfirmed) {
+            getUsers();
+        }
+    })
 })
 .catch(error => console.log(error))
 }

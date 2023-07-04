@@ -102,8 +102,18 @@ class ProductManager {
 
     create = async (productInfo) => {
         try {
-            const data = await promises.readFile(this.path, 'utf-8');
-            this.products = JSON.parse(data);
+            if(existsSync(this.path)) {
+                const stats = await promises.stat(this.path);
+                if(stats.size !== 0) {
+                    
+                    const data = await promises.readFile(this.path, 'utf-8');
+                    this.products = JSON.parse(data);
+                } else {
+                    this.products = [];
+                }
+            } else {
+                this.products = [];
+            }
 
             let id;
             let unique = false;
@@ -133,9 +143,19 @@ class ProductManager {
 
     update = async (pid, updates) => {
         try {
-            const data = await promises.readFile(this.path, 'utf-8');
-            this.products = JSON.parse(data);
-
+            if(existsSync(this.path)) {
+                const stats = await promises.stat(this.path);
+                if(stats.size !== 0) {
+                    
+                    const data = await promises.readFile(this.path, 'utf-8');
+                    this.products = JSON.parse(data);
+                } else {
+                    this.products = [];
+                }
+            } else {
+                this.products = [];
+            }
+            
             const indexById = this.products.findIndex(prod => prod.id === pid);
             const product = this.products[indexById];
             this.products[indexById] = updates;

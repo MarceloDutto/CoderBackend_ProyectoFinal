@@ -79,6 +79,16 @@ const addToCart = async (pid) => {
                 headers,
                 method
             });
+
+        Swal.fire({
+            text: `Producto agregado al carrito `,
+            toast: true,
+            position: "bottom-right",
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: false,
+            icon: "success"
+        });
     } catch (error) {
         console.log(error);
     }

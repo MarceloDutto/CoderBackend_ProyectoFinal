@@ -11,9 +11,9 @@ class TicketManager {
         }
     };
 
-    getById = async (tid) => {
+    getByCode = async (code) => {
         try {
-            const data = await Ticket.findById(tid);
+            const data = await Ticket.findOne({code: code});
             return data? data: {};
         } catch(error) {
             throw error;

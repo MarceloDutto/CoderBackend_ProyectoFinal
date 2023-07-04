@@ -229,8 +229,6 @@ export const purchaseProductsInCart = async (cid, purchaser) => {
             purchaser: purchaser.fullname
         };
 
-        console.log(ticketInfo)
-
         const purchaseTicket = await createTicket(ticketInfo);
         if(rejectedProducts.length > 0) return {statusCode: 200, status: 'success', message: 'Algunos productos de tu carrito no tienen stock. La compra fue realizada exitosamente con los productos disponibles', payload: purchaseTicket};
 

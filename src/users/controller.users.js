@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
-import { getUsers, getUserById, createUser, uploadDocumentation, changeUserRole, deleteUser, deleteOutdatedUsers } from "./service.users.js";
+import { getUsers, getUserById, createUser, uploadDocumentation, changeUserRole, deleteUser, deleteOutdatedUsers, sendEmail, getUserByEmail } from "./service.users.js";
+import { getTicketByCode } from "../tickets/service.tickets.js";
 import { imgFileFilter, profImgStorage, docStorage, docFileFilter } from "../utils/multer.utils.js";
 import validateCreationParams from "./validateCreationParams.users.js";
 import objectIdRegex from "../utils/objectIdRegex.utils.js";
@@ -40,6 +41,31 @@ router.get('/premium/:uid', handlePolicies(['ADMIN']), async (req, res) => {
         
         res.json({status: response.status, message: response.message, payload: response.payload});
     } catch(error) {
+        req.logger.error(error);
+        res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
+    }
+});
+
+router.get('/email/user/:email/ticket/:code', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
+    try {
+        const { email } = req.params;
+        if(!regexEmail.test(email)) return res.status(400).json({status: 'error', message: 'El email del usuario no tiene un formato válido'});
+
+        const { code } = req.params;
+        if(!uuidRegex.test(code)) return res.status(400).json({status: 'error', message: 'El código del ticket no tiene un formato válido'});
+
+        const user = await getUserByEmail(email);
+        if(Object.keys(user.payload).length === 0 ) return res.status(400).json({status: 'error', message: 'Usuario no encontrado'});
+
+        const ticket = await getTicketByCode(code)
+        console.log(code)
+        if(Object.keys(ticket.payload).length === 0 ) return res.status(400).json({status: 'error', message: 'Ticket no encontrado'});  
+
+        const result = await sendEmail(user.payload, ticket.payload);
+        res.json({status: "success", message: 'El correo electrónico fue enviado al usuario', result});
+        
+    } catch(error) {
+        console.log(error)
         req.logger.error(error);
         res.status(500).json({status: 'error', message: 'Error interno del servidor', error});
     }

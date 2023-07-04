@@ -3,6 +3,9 @@ import { usersDAO } from '../dao/factory.dao.js';
 import { createCart, deleteCart } from "../carts/service.carts.js";
 import { createHash } from "../utils/bcrypt.utils.js";
 import { generateToken } from '../utils/jwt.utils.js';
+import { transport } from '../utils/nodemailer.utils.js';
+import nodemailerConfig from '../config/nodemailer.config.js';
+import { generatePurchaseTicketEmail } from '../mails/purchaseTicket.mail.js';
 import userDTO from "../DTOs/user.dto.js";
 import __dirname from '../utils/dirname.utils.js';
 import appConfig from "../config/app.config.js";
@@ -221,6 +224,22 @@ export const uploadDocumentation = async (uid, files) => {
 
         const updatedUser = await updateUser(uid, user);
         return {status: 'success', message: `${updatedUser.message} Documentación cargada con éxito.`, payload: {uploadedDocuments: uploadedDocuments}};
+    } catch(error) {
+        throw error;
+    }
+};
+
+export const sendEmail = async (user, ticket) => {
+    try {
+        const mailOptions = {
+            from: nodemailerConfig.gmail_user,
+            to: user.email,
+            subject: 'coderBackend - Comprobante de su compra',
+            html: generatePurchaseTicketEmail(user, ticket),
+            attachments: []
+        };
+        const result = await transport.sendMail(mailOptions);
+        return result;
     } catch(error) {
         throw error;
     }

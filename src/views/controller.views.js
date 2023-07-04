@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getProducts, getProductById } from "../products/service.products.js"; 
 import { getCartById } from "../carts/service.carts.js";
+import { getTicketByCode } from "../tickets/service.tickets.js";
 import handlePolicies from "../middlewares/handlePolicies.middleware.js";
 
 const router = Router();
@@ -39,10 +40,13 @@ router.get('/resetPassword', handlePolicies(['PUBLIC']), (req, res) => {
 
 router.get('/profile', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), (req, res) => {
     const user = req.user;
+
+    const showAdmin = user.role === 'admin' ? true : false;
     res.render('profile', {
         title: 'Perfil',
         style: 'profile.css',
-        user
+        user,
+        showAdmin
     })
 });
 
@@ -134,6 +138,37 @@ router.get('/cart/:cid', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (re
             style: 'cart.css'
         });
     }
+});
+
+router.get('/cart/ticket/:code', handlePolicies(['USER', 'PREMIUM', 'ADMIN']), async (req, res) => {
+    let showTicket;
+    const { code } = req.params;
+    const user = req.user;
+    
+    try {
+        const ticket = await getTicketByCode(code);
+        showTicket = (Object.keys(ticket.payload).length === 0) ? false : true;
+
+        res.render('ticket', {
+            title: 'Ticket de compra',
+            style: 'ticket.css',
+            userId: user.email,
+            userName: user.fullname,
+            showTicket,
+            ticketId: ticket.payload._id ? ticket.payload._id : ticket.payload.id,
+            code: ticket.payload.code,
+            purchase_datetime: ticket.payload.purchase_datetime,
+            products: ticket.payload.products,
+            amount: ticket.payload.amount.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        });
+   } catch(error) {
+        console.log(error);
+        req.logger.error(error);
+        res.render('ticket', {
+            showTicket,
+            style: 'ticket.css'
+        });
+   }
 });
 
 router.get('/admin', handlePolicies(['ADMIN']), (req, res) => {

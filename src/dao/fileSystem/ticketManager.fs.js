@@ -27,6 +27,27 @@ class TicketManager {
         }
     };
 
+    getByCode = async (code) => {
+        try {
+            if(existsSync(this.path)) {
+                const stats = await promises.stat(this.path);
+                if(stats.size !== 0) {
+                    const data = await promises.readFile(this.path, 'utf-8');
+                    this.tickets = JSON.parse(data);
+                } else {
+                    this.tickets = [];
+                };
+            } else {
+                this.tickets = [];
+            };
+
+            const ticketById = this.tickets.find(ticket => ticket.code === code);
+            return ticketById ? ticketById : {};
+        } catch(error) {
+            throw error;
+        }
+    };
+
     create = async (ticketInfo) => {
         try {
             if(existsSync(this.path)) {
