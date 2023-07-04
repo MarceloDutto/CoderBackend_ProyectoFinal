@@ -4,7 +4,7 @@
 
 ## :floppy_disk: Versión actual
 
-* 0.20.0 | (3/7/2023)
+* 1.0.0 | (3/7/2023)
 
 <br/>
 
@@ -22,7 +22,7 @@ El propósito de este repositorio y el de esta API, es educacional y de prueba. 
 
 ## :rocket: Deploy
 
-proximamente...
+Se puede acceder a la API implementada en producción desde este [enlace](https://coder-backend-ecommerce.onrender.com).
 
 <br/>
 
@@ -65,7 +65,7 @@ proximamente...
 
 ## :book: Documentación
 
-La API e-commerce Backend cuenta con una completa documentación realizada en Swagger. Se puede acceder a ella desde el navegador en la ruta '/apidocs'.
+La API e-commerce Backend cuenta con una completa documentación realizada en Swagger. Se puede acceder a ella desde [aquí](https://coder-backend-ecommerce.onrender.com/apidocs/).
 
 <br/>
 
@@ -269,6 +269,12 @@ Para más detalles referirse a la carpeta '/test'.
 * Se hicieron modificaciones para mejorar la interacción del usuario desde las vsitas hacia los endpoints.
 * Se realizaron correcciones y mejoras significativas y se perfeccionaron los detalles finales para garantizar el mejor resultado posible.
 * Se finalizó el documento readme.
+
+<b>Release v1.0.0 | 3/7/2023</b>
+
+* Se desplegó la API funcionando en *render*.
+* Actualización del readme.
+
 
 ## :bust_in_silhouette: Autor
 
